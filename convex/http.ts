@@ -56,6 +56,7 @@ http.route({
           email,
           name,
           image: image_url,
+        
         });
       } catch (error) {
         console.log("Error creating user:", error);

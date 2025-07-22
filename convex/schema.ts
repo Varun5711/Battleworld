@@ -24,6 +24,7 @@ export default defineSchema({
     description: v.optional(v.string()),
     roleType: v.optional(v.string()),
     createdAt: v.number(),
+    location: v.optional(v.string()),
     interviewerId: v.string(), // Clerk ID of Doom posting the job
   }).index("by_interviewer", ["interviewerId"]),
 

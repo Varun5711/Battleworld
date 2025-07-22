@@ -5,7 +5,7 @@ import { v } from "convex/values";
 export const createApplication = mutation({
   args: {
     jobId: v.id("jobs"),
-    resume: v.optional(v.string()),
+    resume: v.optional(v.id("_storage")),
     status: v.union(
       v.literal("pending"),
       v.literal("shortlisted"),
@@ -25,15 +25,22 @@ export const createApplication = mutation({
 });
 
 // Get logged-in candidate's applications
+// convex/applications.ts
 export const getMyApplications = query({
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthorized");
-
-    return await ctx.db
+  args: { candidateId: v.string() },
+  handler: async (ctx, args) => {
+    const apps = await ctx.db
       .query("applications")
-      .withIndex("by_candidate", (q) => q.eq("candidateId", identity.subject))
+      .withIndex("by_candidate", (q) => q.eq("candidateId", args.candidateId))
       .collect();
+
+    const jobs = await ctx.db.query("jobs").collect();
+    const jobsMap = Object.fromEntries(jobs.map((job) => [job._id, job]));
+
+    return apps.map((app) => ({
+      ...app,
+      interviewerId: jobsMap[app.jobId]?.interviewerId ?? null,
+    }));
   },
 });
 
@@ -96,5 +103,35 @@ export const deleteApplication = mutation({
     if (!identity) throw new Error("Unauthorized");
 
     return await ctx.db.delete(args.applicationId);
+  },
+});
+
+// convex/applications.ts
+export const getAllApplications = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    return await ctx.db.query("applications").collect();
+  },
+});
+
+export const getShortlistedCandidates = query({
+  args: { clerkId: v.string() },
+  handler: async (ctx, args) => {
+    const jobs = await ctx.db
+      .query("jobs")
+      .withIndex("by_interviewer", (q) => q.eq("interviewerId", args.clerkId))
+      .collect();
+    const jobIds = jobs.map((j) => j._id);
+
+    const apps = await ctx.db.query("applications").collect();
+    return apps
+      .filter((app) => jobIds.includes(app.jobId) && app.status === "shortlisted")
+      .map((app) => ({
+        ...app,
+        jobTitle: jobs.find((j) => j._id === app.jobId)?.title,
+        candidateName: app.candidateId,
+      }));
   },
 });

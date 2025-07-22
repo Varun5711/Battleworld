@@ -16,10 +16,13 @@ import type {
 import type * as applications from "../applications.js";
 import type * as chatPermissions from "../chatPermissions.js";
 import type * as comments from "../comments.js";
+import type * as dashboard from "../dashboard.js";
 import type * as email from "../email.js";
 import type * as http from "../http.js";
 import type * as interviews from "../interviews.js";
 import type * as jobs from "../jobs.js";
+import type * as resume from "../resume.js";
+import type * as stream from "../stream.js";
 import type * as users from "../users.js";
 
 /**
@@ -34,10 +37,13 @@ declare const fullApi: ApiFromModules<{
   applications: typeof applications;
   chatPermissions: typeof chatPermissions;
   comments: typeof comments;
+  dashboard: typeof dashboard;
   email: typeof email;
   http: typeof http;
   interviews: typeof interviews;
   jobs: typeof jobs;
+  resume: typeof resume;
+  stream: typeof stream;
   users: typeof users;
 }>;
 export declare const api: FilterApi<
