@@ -6,6 +6,7 @@ export const createJob = mutation({
     title: v.string(),
     description: v.optional(v.string()),
     roleType: v.optional(v.string()),
+    location: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();

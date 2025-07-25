@@ -7,13 +7,13 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import ConvexClerkProvider from "@/providers/ConvexClerkProvider";
 import StreamVideoProvider from "@/providers/StreamClientProvider";
 
-import Navbar from "@/components/shared/Navbar";
 import PageTransitionWrapper from "@/components/shared/PageWrapper";
 import ToasterClient from "@/components/shared/ToasterClient";
 
 import { SignedIn, SignedOut, SignIn, ClerkLoaded, ClerkLoading } from "@clerk/nextjs";
-import SyncClerkUser from "@/components/SyncClerkUser";
 import Loader from "@/components/shared/LoaderUI";
+import NavbarWrapper from "@/components/shared/NavbarWrapper";
+import SyncClerkUser from "@/components/SyncClerkUser";
 
 const geistSans = localFont({
   src: "./fonts/GeistVFfont.woff",
@@ -37,6 +37,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  
   return (
     <ConvexClerkProvider>
       <html lang="en" suppressHydrationWarning>
@@ -48,9 +49,10 @@ export default function RootLayout({
 
             <ClerkLoaded>
               <SignedIn>
+                <SyncClerkUser />
                 <StreamVideoProvider>
                   <div className="min-h-screen flex flex-col">
-                    {/* <Navbar /> */}
+                    <NavbarWrapper />
                     <main className="flex-1 px-4 sm:px-6 lg:px-8">
                       <PageTransitionWrapper>{children}</PageTransitionWrapper>
                     </main>
@@ -59,7 +61,7 @@ export default function RootLayout({
               </SignedIn>
 
               <SignedOut>
-                <SignIn />
+                <SignIn routing="hash"/>
               </SignedOut>
             </ClerkLoaded>
           </ThemeProvider>

@@ -123,15 +123,97 @@ export const getShortlistedCandidates = query({
       .query("jobs")
       .withIndex("by_interviewer", (q) => q.eq("interviewerId", args.clerkId))
       .collect();
+
     const jobIds = jobs.map((j) => j._id);
 
-    const apps = await ctx.db.query("applications").collect();
-    return apps
-      .filter((app) => jobIds.includes(app.jobId) && app.status === "shortlisted")
-      .map((app) => ({
-        ...app,
-        jobTitle: jobs.find((j) => j._id === app.jobId)?.title,
-        candidateName: app.candidateId,
-      }));
+    const applications = await ctx.db.query("applications").collect();
+
+    const shortlistedApps = applications.filter(
+      (app) => jobIds.includes(app.jobId) && app.status === "shortlisted"
+    );
+
+    // fetch all candidateIds (clerkIds)
+    const candidateClerkIds = shortlistedApps.map((app) => app.candidateId);
+
+    // fetch all matching users
+    const users = await ctx.db.query("users").collect();
+    const usersMap = Object.fromEntries(
+      users.map((user) => [user.clerkId, user.name])
+    );
+
+    return shortlistedApps.map((app) => ({
+      ...app,
+      jobTitle: jobs.find((j) => j._id === app.jobId)?.title,
+      candidateName: usersMap[app.candidateId] ?? "Unknown",
+    }));
+  },
+});
+
+export const getApplicationsByJobIds = query({
+  args: {
+    jobIds: v.array(v.id("jobs")),
+    status: v.optional(v.string()), // <-- add status filter
+  },
+  handler: async (ctx, args) => {
+    const allApplications = [];
+
+    for (const jobId of args.jobIds) {
+      let query = ctx.db
+        .query("applications")
+        .withIndex("by_job", (q) => q.eq("jobId", jobId));
+
+      // 🟢 Only filter by status if provided
+      if (args.status) {
+        query = query.filter((q) => q.eq(q.field("status"), args.status));
+      }
+
+      const apps = await query.collect();
+      allApplications.push(...apps);
+    }
+
+    return allApplications;
+  },
+});
+
+export const getCandidateApplicationForJob = query({
+  args: {
+    jobId: v.id("jobs"),
+    candidateClerkId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("applications")
+      .withIndex("by_job", (q) => q.eq("jobId", args.jobId))
+      .filter((q) => q.eq(q.field("candidateId"), args.candidateClerkId))
+      .collect();
+  },
+});
+
+// Get all applications for jobs created by the current interviewer
+export const getApplicationsForInterviewer = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    // Step 1: Get all jobs by interviewer
+    const jobs = await ctx.db
+      .query("jobs")
+      .withIndex("by_interviewer", (q) => q.eq("interviewerId", identity.subject))
+      .collect();
+
+    const jobIds = jobs.map((job) => job._id);
+
+    // Step 2: Get all applications for those jobs
+    const applications = await ctx.db
+      .query("applications")
+      .filter((q) =>
+        q.or(...jobIds.map((id) => q.eq(q.field("jobId"), id)))
+      )
+      .collect();
+
+    return applications.map((app) => ({
+      ...app,
+      candidateClerkId: app.candidateId, // 👈 attach this to match your UI props
+    }));
   },
 });

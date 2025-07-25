@@ -26,71 +26,125 @@ export default function CandidateCard({ application, candidateClerkId }: Props) 
     application?.jobId ? { jobId: application.jobId } : "skip"
   );
 
-  if (candidate === undefined || job === undefined) return <div>Loading...</div>;
-  if (candidate === null) return <div>Candidate not found.</div>;
+  if (candidate === undefined || job === undefined) {
+    return (
+      <div className="w-full bg-emerald-950/30 backdrop-blur-xl border border-emerald-800/40 rounded-lg p-8">
+        <div className="text-emerald-300/70 font-light">Loading candidate dossier...</div>
+      </div>
+    );
+  }
+
+  if (candidate === null) {
+    return (
+      <div className="w-full bg-emerald-950/30 backdrop-blur-xl border border-emerald-800/40 rounded-lg p-8">
+        <div className="text-emerald-400/80 font-light">Subject not found in archives.</div>
+      </div>
+    );
+  }
 
   return (
-    <Card className="w-full shadow-xl border border-muted bg-background/60 backdrop-blur-md">
-      <CardContent className="p-6">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-bold">{candidate.name}</h2>
+    <div className="w-full bg-emerald-950/20 backdrop-blur-xl border border-emerald-800/30 rounded-lg shadow-2xl hover:bg-emerald-950/30 hover:border-emerald-700/40 transition-all duration-300">
+      <div className="p-8">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="space-y-3">
+            <h2 className="text-2xl font-light text-emerald-100 tracking-wide">
+              {candidate.name}
+            </h2>
+            
+            {job && (
+              <div className="flex items-center space-x-2">
+                <span className="text-emerald-500/80 text-sm font-medium uppercase tracking-wide">Position Sought:</span>
+                <span className="text-emerald-200/90 font-light">{job.title}</span>
+              </div>
+            )}
 
-          {job && (
-            <p className="text-muted-foreground text-sm">
-              Applying for: <span className="font-semibold">{job.title}</span>
-            </p>
-          )}
-
-          <p className="text-muted-foreground italic text-sm">
-            Preferred Role: {candidate.preferredRole || "N/A"}
-          </p>
-
-          <Separator className="my-2" />
-
-          <p className="text-sm">
-            <span className="font-semibold">Backstory:</span>{" "}
-            {candidate.backstory || "No backstory provided."}
-          </p>
-
-          <div className="mt-2 flex flex-wrap gap-2">
-            {candidate.powers?.map((power, i) => (
-              <Badge variant="secondary" key={i}>
-                {power}
-              </Badge>
-            ))}
+            <div className="flex items-center space-x-2">
+              <span className="text-emerald-500/80 text-sm font-medium uppercase tracking-wide">Specialization:</span>
+              <span className="text-emerald-300/80 font-light italic">
+                {candidate.preferredRole || "Unspecified"}
+              </span>
+            </div>
           </div>
 
-          <div className="mt-2 flex flex-wrap gap-2">
-            {candidate.weaknesses?.map((weakness, i) => (
-              <Badge variant="destructive" key={i}>
-                {weakness}
-              </Badge>
-            ))}
-          </div>
+          <div className="w-full h-px bg-emerald-800/40"></div>
 
-          <Separator className="my-4" />
-
+          {/* Background */}
           <div className="space-y-2">
-            <h3 className="font-semibold">Key Battles</h3>
-            <ul className="list-disc ml-5 text-sm">
-              {candidate.keyBattles?.length && candidate.keyBattles.length > 0 ? (
-                candidate.keyBattles.map((battle, i) => (
-                  <li key={i}>{battle}</li>
-                ))
-              ) : (
-                <li>No battles listed</li>
-              )}
-            </ul>
+            <span className="text-emerald-500/80 text-sm font-medium uppercase tracking-wide">Background:</span>
+            <p className="text-emerald-200/90 font-light leading-relaxed">
+              {candidate.backstory || "No background information provided."}
+            </p>
           </div>
 
-          {application.resume && (
-            <div className="mt-4">
-              <h3 className="font-semibold mb-2">Resume:</h3>
-              <ResumeViewer fileId={application.resume as Id<"_storage">} />
+          {/* Capabilities */}
+          {candidate.powers && candidate.powers.length > 0 && (
+            <div className="space-y-3">
+              <span className="text-emerald-500/80 text-sm font-medium uppercase tracking-wide">Capabilities:</span>
+              <div className="flex flex-wrap gap-2">
+                {candidate.powers.map((power, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 bg-emerald-900/40 border border-emerald-700/50 rounded text-emerald-300 text-sm font-light"
+                  >
+                    {power}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 
-          <div className="mt-6">
+          {/* Limitations */}
+          {candidate.weaknesses && candidate.weaknesses.length > 0 && (
+            <div className="space-y-3">
+              <span className="text-emerald-500/80 text-sm font-medium uppercase tracking-wide">Limitations:</span>
+              <div className="flex flex-wrap gap-2">
+                {candidate.weaknesses.map((weakness, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 bg-red-950/40 border border-red-800/50 rounded text-red-300 text-sm font-light"
+                  >
+                    {weakness}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="w-full h-px bg-emerald-800/40"></div>
+
+          {/* Experience */}
+          <div className="space-y-3">
+            <span className="text-emerald-500/80 text-sm font-medium uppercase tracking-wide">Notable Engagements:</span>
+            <div className="space-y-2">
+              {candidate.keyBattles?.length && candidate.keyBattles.length > 0 ? (
+                candidate.keyBattles.map((battle, i) => (
+                  <div key={i} className="flex items-start space-x-3">
+                    <div className="w-1 h-1 bg-emerald-600/60 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-emerald-200/80 font-light text-sm leading-relaxed">{battle}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="flex items-start space-x-3">
+                  <div className="w-1 h-1 bg-emerald-600/60 rounded-full mt-2 flex-shrink-0"></div>
+                  <span className="text-emerald-300/60 font-light text-sm italic">No engagements documented</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Resume */}
+          {application.resume && (
+            <div className="space-y-3">
+              <span className="text-emerald-500/80 text-sm font-medium uppercase tracking-wide">Documentation:</span>
+              <div className="bg-emerald-950/40 border border-emerald-800/30 rounded p-4">
+                <ResumeViewer fileId={application.resume as Id<"_storage">} />
+              </div>
+            </div>
+          )}
+
+          {/* Controls */}
+          <div className="pt-4 border-t border-emerald-800/40">
             <SwipeControls
               applicationId={application._id}
               candidateId={candidate.clerkId}
@@ -100,7 +154,7 @@ export default function CandidateCard({ application, candidateClerkId }: Props) 
             />
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

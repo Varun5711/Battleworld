@@ -1,29 +1,30 @@
 "use client";
 
-import { Doc, Id } from "@/../convex/_generated/dataModel";
-import CandidateCard from "@/components/dashboard/CandidateCard"; // ✅ adjust path as per your structure
+import { Doc } from "@/../convex/_generated/dataModel";
+import CandidateCard from "@/components/dashboard/CandidateCard";
 
 type Props = {
-  applications: {
-    _id: Id<"applications">;
-    jobId: Id<"jobs">;
-    resume?: Id<"_storage">;
+  applications: (Doc<"applications"> & {
     candidateClerkId: string;
-  }[];
+  })[];
+  onUpdate?: () => void;
 };
 
-export default function ApplicationsDetails({ applications }: Props) {
+export default function ApplicationsDetails({ applications  , onUpdate}: Props) {
   return (
     <div className="mt-6 space-y-4">
       <h2 className="text-xl font-semibold">Recent Applications</h2>
-
-      {applications.map((application) => (
-        <CandidateCard
-          key={application._id}
-          application={application as Doc<"applications"> & { candidateClerkId: string }}
-          candidateClerkId={application.candidateClerkId}
-        />
-      ))}
+      {applications.length === 0 ? (
+        <p className="text-muted-foreground">No applications found.</p>
+      ) : (
+        applications.map((application) => (
+          <CandidateCard
+            key={application._id}
+            application={application}
+            candidateClerkId={application.candidateClerkId}
+          />
+        ))
+      )}
     </div>
   );
 }

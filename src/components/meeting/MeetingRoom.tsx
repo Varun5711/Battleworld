@@ -18,7 +18,7 @@ import {
   } from "@/components/ui/dropdown-menu";
   import { Button } from "@/components/ui/button";
   import EndCallButton from "./EndCallButton";
-  import CodeEditor from "./CodeEditor.tsx";
+  import CodeEditor from "./CodeEditor";
   import PageWrapper from "@/components/shared/PageWrapper";
   
   function MeetingRoom() {

@@ -16,6 +16,15 @@ export default defineSchema({
     weaknesses: v.optional(v.array(v.string())),
     keyBattles: v.optional(v.array(v.string())),
     preferredRole: v.optional(v.string()),
+
+    location: v.optional(v.string()),
+    // experience: v.optional(v.string()),
+    // education: v.optional(v.string()),
+    // github: v.optional(v.string()),
+    // linkedin: v.optional(v.string()),
+    // portfolio: v.optional(v.string()),
+    // skills: v.optional(v.string()),
+    // about: v.optional(v.string()),
   }).index("by_clerk_id", ["clerkId"]),
 
   // JOBS TABLE
@@ -80,11 +89,13 @@ export default defineSchema({
     body: v.string(),
     sentAt: v.number(),
     senderId: v.optional(v.string()),
-    type: v.optional(v.union(
-      v.literal("invite"),
-      v.literal("rejection"),
-      v.literal("followup")
-    )),
+    type: v.optional(
+      v.union(
+        v.literal("invite"),
+        v.literal("rejection"),
+        v.literal("followup")
+      )
+    ),
     interviewId: v.optional(v.id("interviews")),
   }).index("by_interview_id", ["interviewId"]),
 });

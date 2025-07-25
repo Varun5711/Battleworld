@@ -71,12 +71,7 @@ export const updateUserProfile = mutation({
     if (!user) throw new Error("User not found");
 
     return await ctx.db.patch(user._id, {
-      name: args.name,
-      backstory: args.backstory,
-      powers: args.powers,
-      weaknesses: args.weaknesses,
-      keyBattles: args.keyBattles,
-      preferredRole: args.preferredRole,
+     
     });
   },
 });
@@ -130,6 +125,26 @@ export const becomeInterviewer = mutation({
 
     return await ctx.db.patch(user._id, {
       role: "interviewer",
+    });
+  },
+});
+
+// ✅ Generic role setter
+export const setUserRole = mutation({
+  args: {
+    clerkId: v.string(),
+    role: v.union(v.literal("candidate"), v.literal("interviewer")),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+      .first();
+
+    if (!user) throw new Error("User not found");
+
+    await ctx.db.patch(user._id, {
+      role: args.role,
     });
   },
 });
