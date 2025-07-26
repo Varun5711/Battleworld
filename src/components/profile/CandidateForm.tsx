@@ -10,14 +10,24 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useCandidate } from "@/hooks/useCandidate";
 
-const powersList = [
-  "Flight",
-  "Telekinesis",
-  "Invisibility",
-  "Laser Vision",
-  "Web-slinging",
-  "Speed",
-  "Strength",
+const skillsList = [
+  "React.js",
+  "Next.js",
+  "MongoDB",
+  "Node.js",
+  "TypeScript",
+  "Docker",
+  "PostgreSQL",
+  "Express.js",
+  "Tailwind CSS",
+  "GraphQL",
+  "Firebase",
+  "Redis",
+  "Kubernetes",
+  "CI/CD",
+  "Jest",
+  "Prisma",
+  "AWS",
 ];
 
 export default function CandidateForm() {
@@ -43,11 +53,9 @@ export default function CandidateForm() {
     }
   }, [candidate]);
 
-  const togglePower = (power: string) => {
+  const togglePower = (skill: string) => {
     setPowers((prev) =>
-      prev.includes(power)
-        ? prev.filter((p) => p !== power)
-        : [...prev, power]
+      prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
     );
   };
 
@@ -55,7 +63,7 @@ export default function CandidateForm() {
     e.preventDefault();
 
     if (!name || !backstory || powers.length === 0 || !preferredRole) {
-      toast.error("Please fill all required fields.");
+      toast.error("Please complete all required fields.");
       return;
     }
 
@@ -83,14 +91,14 @@ export default function CandidateForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto px-4 py-6">
       <Input
-        placeholder="Hero Name"
+        placeholder="Your Full Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
       />
 
       <Textarea
-        placeholder="Your Origin Story"
+        placeholder="Tell us a bit about your professional journey, background or interests..."
         value={backstory}
         onChange={(e) => setBackstory(e.target.value)}
         rows={4}
@@ -98,27 +106,27 @@ export default function CandidateForm() {
       />
 
       <div>
-        <p className="font-semibold mb-2">Select Powers:</p>
+        <p className="font-semibold mb-2">Select Your Technical Skills:</p>
         <div className="flex flex-wrap gap-2">
-          {powersList.map((power) => (
+          {skillsList.map((skill) => (
             <button
               type="button"
-              key={power}
-              onClick={() => togglePower(power)}
+              key={skill}
+              onClick={() => togglePower(skill)}
               className={`px-3 py-1 rounded-full text-sm border ${
-                powers.includes(power)
+                powers.includes(skill)
                   ? "bg-blue-600 text-white"
                   : "bg-gray-100 text-gray-800"
               }`}
             >
-              {power}
+              {skill}
             </button>
           ))}
         </div>
       </div>
 
       <Input
-        placeholder="Weaknesses (comma-separated)"
+        placeholder="Mention areas you'd like to improve (e.g., testing, design patterns)"
         value={weaknesses.join(", ")}
         onChange={(e) =>
           setWeaknesses(e.target.value.split(",").map((s) => s.trim()))
@@ -126,7 +134,7 @@ export default function CandidateForm() {
       />
 
       <Input
-        placeholder="Key Battles (comma-separated)"
+        placeholder="Mention past projects or challenges (e.g., built e-commerce app, scaled backend)"
         value={keyBattles.join(", ")}
         onChange={(e) =>
           setKeyBattles(e.target.value.split(",").map((s) => s.trim()))
@@ -140,9 +148,15 @@ export default function CandidateForm() {
         required
       >
         <option value="">Select Preferred Role</option>
-        <option value="Frontend Avenger">Frontend Avenger</option>
-        <option value="Backend Mutant">Backend Mutant</option>
-        <option value="Fullstack Sorcerer">Fullstack Sorcerer</option>
+        <option value="Frontend Developer">Frontend Developer</option>
+        <option value="Backend Engineer">Backend Engineer</option>
+        <option value="Fullstack Developer">Fullstack Developer</option>
+        <option value="DevOps Specialist">DevOps Specialist</option>
+        <option value="AI/ML Engineer">AI/ML Engineer</option>
+        <option value="Mobile App Developer">Mobile App Developer</option>
+        <option value="UI/UX Designer">UI/UX Designer</option>
+        <option value="Data Engineer">Data Engineer</option>
+        <option value="Product Engineer">Product Engineer</option>
       </select>
 
       <Button type="submit">Save Profile</Button>

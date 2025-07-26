@@ -28,7 +28,7 @@ export default function SwipeControls({
   const router = useRouter();
   const updateStatus = useMutation(api.applications.updateApplicationStatus);
   const createInterview = useMutation(api.interviews.createInterview);
-  const sendEmail = useMutation(api.email.sendEmail);
+  // const sendEmail = useMutation(api.email.sendEmail);
 
   const [swiped, setSwiped] = useState(false);
 
@@ -44,7 +44,7 @@ export default function SwipeControls({
   const handleShortlist = async () => {
     try {
       await updateStatus({ applicationId, status: "shortlisted" });
-
+  
       const interview = await createInterview({
         candidateId,
         title: `Executive Interview: ${candidateName}`,
@@ -53,21 +53,39 @@ export default function SwipeControls({
         streamCallId: "",
         interviewerIds: [],
       });
-
-      await sendEmail({
-        to: candidateEmail,
-        subject: "Application Update - Next Steps",
-        body: `Dear ${candidateName},\n\nThank you for your application. After careful review, we're pleased to invite you to the next stage of our selection process.\n\nYour interview will be scheduled shortly. We look forward to discussing your qualifications in detail.\n\nBest regards,\nDoom Industries Talent Team`,
-        interviewId: interview,
+  
+      const emailResponse = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: candidateEmail,
+          subject: "Application Update - Next Steps",
+          body: `Dear ${candidateName},\n\nThank you for your application. After careful review, we're pleased to invite you to the next stage of our selection process.\n\nYour interview will be scheduled shortly. We look forward to discussing your qualifications in detail.\n\nBest regards,\nDoom Industries Talent Team`,
+          interviewId: interview,
+        }),
       });
-
+  
+      let data;
+      try {
+        data = await emailResponse.json();
+      } catch {
+        throw new Error("Failed to parse email response");
+      }
+  
+      if (!emailResponse.ok || !data?.success) {
+        throw new Error(data?.message || "Email failed");
+      }
+  
       toast.success("Candidate shortlisted successfully");
       router.refresh();
-    } catch {
+    } catch (error) {
       toast.error("Failed to shortlist candidate");
+      console.error(error);
     }
   };
-
+  
   const handleSwipe = async (dir: "left" | "right") => {
     setSwiped(true);
     if (dir === "left") await handleReject();
@@ -82,10 +100,10 @@ export default function SwipeControls({
             className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 p-8 rounded-3xl shadow-2xl w-full max-w-md text-center border border-slate-700/50 backdrop-blur-sm overflow-hidden"
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            whileDrag={{ 
+            whileDrag={{
               scale: 1.02,
               rotate: 1,
-              boxShadow: "0 25px 50px -12px rgba(6, 78, 59, 0.3)"
+              boxShadow: "0 25px 50px -12px rgba(6, 78, 59, 0.3)",
             }}
             onDragEnd={(_, info) => {
               if (info.offset.x > 100) handleSwipe("right");
@@ -93,25 +111,25 @@ export default function SwipeControls({
             }}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ 
-              opacity: 0, 
+            exit={{
+              opacity: 0,
               y: -20,
-              scale: 0.95
+              scale: 0.95,
             }}
-            transition={{ 
+            transition={{
               duration: 0.3,
               type: "spring",
               stiffness: 200,
-              damping: 30
+              damping: 30,
             }}
           >
             {/* Subtle gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/10 via-transparent to-slate-600/20" />
-            
+
             {/* Geometric accent lines */}
             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-600/30 to-transparent" />
             <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-600/30 to-transparent" />
-            
+
             {/* Company logo placeholder */}
             <div className="absolute top-6 right-6 w-8 h-8 bg-emerald-600/20 rounded-lg border border-emerald-500/30 flex items-center justify-center">
               <div className="w-3 h-3 bg-emerald-500 rounded-sm"></div>
@@ -122,14 +140,18 @@ export default function SwipeControls({
                 <h2 className="text-2xl font-semibold mb-2 text-white tracking-tight">
                   {candidateName}
                 </h2>
-                
+
                 <div className="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700/50">
-                  <p className="text-slate-300 text-sm font-medium">{candidateEmail}</p>
+                  <p className="text-slate-300 text-sm font-medium">
+                    {candidateEmail}
+                  </p>
                 </div>
               </div>
 
               <div className="text-slate-400 text-sm bg-slate-900/30 rounded-xl p-4 border border-slate-700/30">
-                <p className="font-medium text-slate-300 mb-2">Review Decision</p>
+                <p className="font-medium text-slate-300 mb-2">
+                  Review Decision
+                </p>
                 <div className="flex items-center justify-between text-xs">
                   <span className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>

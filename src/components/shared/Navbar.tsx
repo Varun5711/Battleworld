@@ -12,7 +12,6 @@ export default function DoomNavbar() {
 
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Determine active tab from path
   const getActiveTab = () => {
     const path = pathname || "";
     if (path.startsWith("/dashboard/create-job")) return "create-job";
@@ -21,15 +20,15 @@ export default function DoomNavbar() {
     if (path.startsWith("/recordings")) return "recordings";
     if (path.startsWith("/jobs")) return "jobs";
     if (path.startsWith("/profile")) return "profile";
+    if (path.startsWith("/arena")) return "arena";
+    if (path.startsWith("/applications")) return "applications"
     return "";
   };
 
   const activeTab = getActiveTab();
 
   useEffect(() => {
-    if (!isLoading) {
-      setIsLoaded(true);
-    }
+    if (!isLoading) setIsLoaded(true);
   }, [isLoading]);
 
   const doomNavItems = [
@@ -41,7 +40,9 @@ export default function DoomNavbar() {
 
   const heroNavItems = [
     { id: "jobs", label: "Available Quests", path: "/jobs" },
+    { id: "arena", label: "Interview Arena", path: "/arena" }, // 🆕 NEW for candidates
     { id: "profile", label: "Hero Profile", path: "/profile" },
+    { id: "applications" , label: "Your Applications" , path: "/applications"}
   ];
 
   const navItems = isInterviewer ? doomNavItems : heroNavItems;
@@ -51,8 +52,8 @@ export default function DoomNavbar() {
   return (
     <nav className="relative bg-gradient-to-r from-black via-gray-950 to-black border-b border-green-800/20 backdrop-blur-xl">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-500/3 via-transparent to-green-500/3 animate-pulse"></div>
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-green-500/30 to-transparent animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-green-500/3 via-transparent to-green-500/3 animate-pulse" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-green-500/30 to-transparent animate-pulse" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-8 py-6">
@@ -64,14 +65,14 @@ export default function DoomNavbar() {
             }`}
           >
             <div className="flex items-center gap-4">
-              <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-gray-500"></div>
+              <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-gray-500" />
               <h1 className="text-2xl font-black bg-gradient-to-r from-green-400 to-gray-300 bg-clip-text text-transparent tracking-wide">
                 {isInterviewer ? "DOOM DOMAIN" : "HERO PORTAL"}
               </h1>
             </div>
           </div>
 
-          {/* Navigation Buttons */}
+          {/* Nav Buttons */}
           <div
             className={`flex items-center gap-2 transition-all duration-1000 delay-300 ${
               isLoaded ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"
@@ -100,7 +101,7 @@ export default function DoomNavbar() {
             ))}
           </div>
 
-          {/* Role Info + User */}
+          {/* Role + User */}
           <div
             className={`flex items-center gap-6 transition-all duration-1000 delay-500 ${
               isLoaded ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
@@ -117,13 +118,7 @@ export default function DoomNavbar() {
               </span>
             </div>
             <div className="w-px h-6 bg-gray-700" />
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-8 h-8",
-                },
-              }}
-            />
+            <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
           </div>
         </div>
       </div>

@@ -71,3 +71,19 @@ export const getEmailById = query({
     return await ctx.db.get(args.emailId);
   },
 });
+
+export const getPendingEmails = query({
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("email")
+      .filter((q) => q.eq(q.field("sentAt"), 0))
+      .collect();
+  },
+});
+
+export const markAsSent = mutation({
+  args: { emailId: v.id("email") },
+  handler: async (ctx, args) => {
+    return await ctx.db.patch(args.emailId, { sentAt: Date.now() });  
+  },
+});

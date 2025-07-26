@@ -71,7 +71,12 @@ export const updateUserProfile = mutation({
     if (!user) throw new Error("User not found");
 
     return await ctx.db.patch(user._id, {
-     
+      name: args.name,
+      backstory: args.backstory,
+      powers: args.powers,
+      weaknesses: args.weaknesses,
+      keyBattles: args.keyBattles,
+      preferredRole: args.preferredRole,
     });
   },
 });

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { StreamChat } from "stream-chat";
 import { useUser } from "@clerk/nextjs";
-import { streamTokenProvider } from "@/actions/stream.actions";
-import { upsertStreamUser } from "@/lib/upsertStreamUser";
+import { streamTokenProvider } from "../actions/stream.actions";
+import { upsertStreamUser } from "../lib/upsertStreamUser";
 
 const client = StreamChat.getInstance(process.env.NEXT_PUBLIC_STREAM_API_KEY!);
 

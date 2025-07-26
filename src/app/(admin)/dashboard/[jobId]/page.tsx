@@ -2,8 +2,9 @@
 import { useParams } from "next/navigation";
 import SwipeControls from "@/components/dashboard/SwipeControls";
 import { Id } from "@/../convex/_generated/dataModel"; // adjust path if needed
+import withRoleProtection from "../../../../lib/withRoleProtection"
 
-export default function ReviewPage() {
+function ReviewPage() {
   const { jobId } = useParams();
   return (
     <SwipeControls
@@ -16,3 +17,5 @@ export default function ReviewPage() {
     />
   );
 }
+
+export default withRoleProtection(ReviewPage , ["interviewer"]);

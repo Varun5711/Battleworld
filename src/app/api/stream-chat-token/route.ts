@@ -1,5 +1,3 @@
-// app/api/stream-chat-token/route.ts
-
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server"; // ✅ correct import
 import { upsertStreamUser, generateStreamToken } from "@/lib/stream";
@@ -13,7 +11,6 @@ export async function GET() {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  // Ensure name is always a string, image is string or undefined
   const name = sessionClaims && typeof sessionClaims === 'object' && sessionClaims.name ? String(sessionClaims.name) : "Anonymous";
   const image = sessionClaims && typeof sessionClaims === 'object' && sessionClaims.picture ? String(sessionClaims.picture) : undefined;
 

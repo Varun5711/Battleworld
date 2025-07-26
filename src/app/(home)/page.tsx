@@ -50,8 +50,20 @@ export default function HomePage() {
     <div className="relative w-full min-h-screen overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-black text-white">
       {/* Lightning Background */}
       <div className="absolute inset-0 z-0">
-        <Lightning hue={120} xOffset={0} speed={0.8} intensity={0.4} size={1.2} />
-        <Lightning hue={280} xOffset={100} speed={0.5} intensity={0.3} size={0.8} />
+        <Lightning
+          hue={120}
+          xOffset={0}
+          speed={0.8}
+          intensity={0.4}
+          size={1.2}
+        />
+        <Lightning
+          hue={280}
+          xOffset={100}
+          speed={0.5}
+          intensity={0.3}
+          size={0.8}
+        />
       </div>
 
       {/* Mouse Glow */}
@@ -68,7 +80,9 @@ export default function HomePage() {
       {/* Main Content */}
       <div className="relative z-20 min-h-screen px-12 py-24 max-w-7xl mx-auto">
         {/* Header */}
-        <div className={`mb-32 transform transition-all duration-1500 ${isLoaded ? "translate-y-0 opacity-100" : "-translate-y-12 opacity-0"}`}>
+        <div
+          className={`mb-32 transform transition-all duration-1500 ${isLoaded ? "translate-y-0 opacity-100" : "-translate-y-12 opacity-0"}`}
+        >
           <div className="flex items-center mb-8">
             <div className="w-2 h-16 bg-gradient-to-b from-green-500 to-gray-500 mr-8"></div>
             <h1 className="text-7xl font-black bg-gradient-to-r from-green-400 via-gray-300 to-green-500 bg-clip-text text-transparent leading-tight tracking-tight">
@@ -83,7 +97,9 @@ export default function HomePage() {
         {/* Buttons Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 mb-32">
           {/* Left Quote */}
-          <div className={`transform transition-all duration-1500 delay-300 ${isLoaded ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"}`}>
+          <div
+            className={`transform transition-all duration-1500 delay-300 ${isLoaded ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"}`}
+          >
             <div className="border-l-4 border-green-500 pl-8">
               <blockquote className="text-2xl font-light text-gray-300 italic mb-8 leading-relaxed">
                 "Heroes seek glory. Villains demand legacy.
@@ -95,8 +111,10 @@ export default function HomePage() {
           </div>
 
           {/* Right Buttons */}
-          <div className={`flex flex-col gap-8 transform transition-all duration-1500 delay-500 ${isLoaded ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"}`}>
-            {!dbUser?.role ? (
+          <div
+            className={`flex flex-col gap-8 transform transition-all duration-1500 delay-500 ${isLoaded ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"}`}
+          >
+            {!dbUser?.role || dbUser.role === "candidate" ? (
               <>
                 <button
                   onClick={() => router.push("/signup")}
@@ -109,6 +127,7 @@ export default function HomePage() {
                     <div className="w-2 h-2 border border-gray-600 rotate-45 group-hover:border-gray-400 group-hover:translate-x-1 transition-all duration-300"></div>
                   </div>
                 </button>
+
                 <button
                   onClick={() => setShowDoomModal(true)}
                   className="group relative bg-gradient-to-r from-green-950/20 to-gray-950/20 backdrop-blur-sm border border-green-800/40 hover:border-green-600/60 text-white px-8 py-4 font-medium tracking-wide transition-all duration-500 hover:from-green-950/30 hover:to-gray-950/30"
@@ -128,22 +147,18 @@ export default function HomePage() {
               >
                 Enter Doom’s Dashboard
               </button>
-            ) : (
-              <button
-                onClick={() => router.push("/profile/setup")}
-                className="bg-green-700 hover:bg-green-600 text-white px-8 py-4 rounded transition"
-              >
-                Enter Candidate Arena
-              </button>
-            )}
+            ) : null}
           </div>
         </div>
 
         {/* Quote */}
-        <div className={`flex justify-end mb-24 transform transition-all duration-1500 delay-700 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
+        <div
+          className={`flex justify-end mb-24 transform transition-all duration-1500 delay-700 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+        >
           <div className="bg-slate-900/40 backdrop-blur-lg border border-slate-700/50 p-12 max-w-4xl border-r-4 border-r-green-500">
             <blockquote className="text-2xl font-light text-gray-300 italic mb-8 text-right">
-              "In a world torn by chaos, Doom interviews not to hire... but to judge."
+              "In a world torn by chaos, Doom interviews not to hire... but to
+              judge."
             </blockquote>
             <div className="w-32 h-px bg-gradient-to-l from-green-500 to-transparent ml-auto mb-8" />
             <p className="text-lg font-light text-gray-400 leading-relaxed text-right">
@@ -155,24 +170,34 @@ export default function HomePage() {
         </div>
 
         {/* Footer Tech */}
-        <div className={`transform transition-all duration-1500 delay-900 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
+        <div
+          className={`transform transition-all duration-1500 delay-900 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+        >
           <div className="flex items-center gap-8 text-gray-500 text-sm font-light">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 border border-green-500/50 bg-green-500/20"></div>
-              <span className="text-gray-400 uppercase tracking-wider">Powered by</span>
+              <span className="text-gray-400 uppercase tracking-wider">
+                Powered by
+              </span>
             </div>
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-3">
                 <div className="w-1 h-1 bg-blue-400 animate-pulse"></div>
-                <span className="text-blue-300 font-medium tracking-wide">Clerk</span>
+                <span className="text-blue-300 font-medium tracking-wide">
+                  Clerk
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-1 h-1 bg-green-400 animate-pulse"></div>
-                <span className="text-green-300 font-medium tracking-wide">ConvexDB</span>
+                <span className="text-green-300 font-medium tracking-wide">
+                  ConvexDB
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-1 h-1 bg-purple-400 animate-pulse"></div>
-                <span className="text-purple-300 font-medium tracking-wide">Stream.io</span>
+                <span className="text-purple-300 font-medium tracking-wide">
+                  Stream.io
+                </span>
               </div>
             </div>
           </div>
