@@ -168,3 +168,44 @@ export const getInterviewerStats = query({
     };
   },
 });
+
+
+export const sendInterviewReminderEmails = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    const oneHourLater = now + 60 * 60 * 1000;
+
+    const interviews = await ctx.db
+      .query("interviews")
+      .filter((q) =>
+        q.and(
+          q.gte(q.field("startTime"), now),
+          q.lte(q.field("startTime"), oneHourLater)
+        )
+      )
+      .collect();
+
+      for (const interview of interviews) {
+        const candidate = await ctx.db
+          .query("users")
+          .withIndex("by_clerk_id", (q) => q.eq("clerkId", interview.candidateId))
+          .first();
+        if (!candidate) continue;
+      
+        await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/send-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: candidate.email,
+            subject: "⏰ Reminder: Upcoming Interview",
+            htmlBody: `<h2>Hi!</h2><p>This is a reminder for your interview at ${new Date(
+              interview.startTime
+            ).toLocaleTimeString()}.</p>`,
+          }),
+        });
+      }
+  },
+});

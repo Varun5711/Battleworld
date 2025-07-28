@@ -200,7 +200,7 @@ export default function CandidateInterviewUI() {
 
   if (!candidateId || interviews === undefined || roleLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950 flex items-center justify-center">
         <div className="text-center space-y-8">
           <div className={`w-20 h-20 border-4 border-t-current rounded-full animate-spin mx-auto ${
             isInterviewer ? 'border-green-400/30 text-green-400' : 'border-blue-400/30 text-blue-400'
@@ -244,7 +244,7 @@ export default function CandidateInterviewUI() {
     };
 
     return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950">
         {/* Header Section */}
         <div className="relative overflow-hidden">
           <div className={`absolute inset-0 bg-gradient-to-r ${themeColors.accent}`}></div>
@@ -319,7 +319,7 @@ export default function CandidateInterviewUI() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950">
       {/* Header Section */}
       <div className="relative overflow-hidden">
         <div className={`absolute inset-0 bg-gradient-to-r ${themeColors.accent}`}></div>

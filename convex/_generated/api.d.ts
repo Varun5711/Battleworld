@@ -16,6 +16,8 @@ import type {
 import type * as applications from "../applications.js";
 import type * as chatPermissions from "../chatPermissions.js";
 import type * as comments from "../comments.js";
+import type * as cron from "../cron.js";
+import type * as crons from "../crons.js";
 import type * as dashboard from "../dashboard.js";
 import type * as email from "../email.js";
 import type * as http from "../http.js";
@@ -37,6 +39,8 @@ declare const fullApi: ApiFromModules<{
   applications: typeof applications;
   chatPermissions: typeof chatPermissions;
   comments: typeof comments;
+  cron: typeof cron;
+  crons: typeof crons;
   dashboard: typeof dashboard;
   email: typeof email;
   http: typeof http;

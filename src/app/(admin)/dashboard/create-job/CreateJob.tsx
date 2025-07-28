@@ -32,7 +32,7 @@ export default function CreateJob() {
     try {
       await createJob(formData);
       toast.success("Position successfully added to Doom's empire!");
-      router.push("/dashboard/jobs");
+      router.push("/dashboard");
     } catch (err) {
       console.error(err);
       toast.error("Position creation failed. Doom demands perfection.");
@@ -91,10 +91,10 @@ export default function CreateJob() {
 
           {/* Title */}
           <div className="space-y-6">
-            <h1 className="text-5xl lg:text-6xl font-thin text-white tracking-tight leading-none">
-              Expand Doom's
-              <span className="block font-light bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500 bg-clip-text text-transparent mt-2">
-                Legion
+            <h1 className="text-5xl lg:text-6xl font-mono font-black text-white tracking-tighter leading-none">
+              EXPAND DOOM'S
+              <span className="block font-mono font-black bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500 bg-clip-text text-transparent mt-2">
+                LEGION
               </span>
             </h1>
 
@@ -135,8 +135,8 @@ export default function CreateJob() {
                 <Step isValid={isStep1Valid}>
                   <div className="space-y-6">
                     <div className="mb-8">
-                      <h2 className="text-3xl font-light text-white tracking-wide mb-3">
-                        Define the Role
+                      <h2 className="text-3xl font-mono font-black text-white tracking-tight mb-3">
+                        DEFINE THE ROLE
                       </h2>
                       <p className="text-zinc-400 font-light text-lg">
                         What position within Doom's hierarchy requires fulfillment?
@@ -169,7 +169,7 @@ export default function CreateJob() {
                         <div className="w-10 h-10 mx-auto bg-emerald-500/20 rounded-xl flex items-center justify-center">
                           <div className="w-5 h-5 bg-emerald-400 rounded-md"></div>
                         </div>
-                        <h3 className="text-white font-light">Be Specific</h3>
+                        <h3 className="text-white font-mono font-black tracking-tight">BE SPECIFIC</h3>
                         <p className="text-zinc-400 text-sm font-light">
                           Doom values precision in all designations
                         </p>
@@ -179,7 +179,7 @@ export default function CreateJob() {
                         <div className="w-10 h-10 mx-auto bg-emerald-500/20 rounded-xl flex items-center justify-center">
                           <div className="w-5 h-5 bg-emerald-400 rounded-md transform rotate-45"></div>
                         </div>
-                        <h3 className="text-white font-light">Reflect Authority</h3>
+                        <h3 className="text-white font-mono font-black tracking-tight">REFLECT AUTHORITY</h3>
                         <p className="text-zinc-400 text-sm font-light">
                           The title should convey the role's importance
                         </p>
@@ -191,8 +191,8 @@ export default function CreateJob() {
                 <Step isValid={isStep2Valid}>
                   <div className="space-y-6">
                     <div className="mb-8">
-                      <h2 className="text-3xl font-light text-white tracking-wide mb-3">
-                        Duties & Requirements
+                      <h2 className="text-3xl font-mono font-black text-white tracking-tight mb-3">
+                        DUTIES & REQUIREMENTS
                       </h2>
                       <p className="text-zinc-400 font-light text-lg">
                         Detail the expectations and qualifications Doom demands.
@@ -231,8 +231,8 @@ export default function CreateJob() {
                 <Step isValid={isStep3Valid}>
                   <div className="space-y-6">
                     <div className="mb-8">
-                      <h2 className="text-3xl font-light text-white tracking-wide mb-3">
-                        Domain of Operations
+                      <h2 className="text-3xl font-mono font-black text-white tracking-tight mb-3">
+                        DOMAIN OF OPERATIONS
                       </h2>
                       <p className="text-zinc-400 font-light text-lg">
                         Where will this servant of Doom execute their duties?
@@ -262,20 +262,20 @@ export default function CreateJob() {
 
                     {/* Summary Preview */}
                     <div className="mt-12 p-8 rounded-2xl bg-zinc-800/30 border border-zinc-700/40">
-                      <h3 className="text-xl font-light text-white mb-6 tracking-wide">
-                        Final Review - Doom's Requirements
+                      <h3 className="text-xl font-mono font-black text-white mb-6 tracking-tight">
+                        FINAL REVIEW - DOOM'S REQUIREMENTS
                       </h3>
                       <div className="space-y-6">
                         <div>
-                          <h4 className="text-emerald-400 font-light mb-2">Position:</h4>
+                          <h4 className="text-emerald-400 font-mono font-black tracking-tight mb-2">POSITION:</h4>
                           <p className="text-white">{formData.title || "Not specified"}</p>
                         </div>
                         <div>
-                          <h4 className="text-emerald-400 font-light mb-2">Location:</h4>
+                          <h4 className="text-emerald-400 font-mono font-black tracking-tight mb-2">LOCATION:</h4>
                           <p className="text-white">{formData.location || "Not specified"}</p>
                         </div>
                         <div>
-                          <h4 className="text-emerald-400 font-light mb-2">Description:</h4>
+                          <h4 className="text-emerald-400 font-mono font-black tracking-tight mb-2">DESCRIPTION:</h4>
                           <p className="text-white text-sm leading-relaxed">
                             {formData.description ? 
                               formData.description.slice(0, 200) + (formData.description.length > 200 ? "..." : "") 
