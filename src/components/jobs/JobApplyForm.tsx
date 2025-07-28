@@ -43,18 +43,6 @@ export default function JobApplyForm({ jobId, onSuccess, disabled }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Input
-        placeholder="Paste your resume text or link"
-        value={resumeText}
-        onChange={(e) => setResumeText(e.target.value)}
-        disabled={disabled}
-      />
-
-      <div>
-        <p className="text-sm text-muted-foreground mb-2">
-          Or upload a PDF resume:
-        </p>
-
         {!disabled ? (
           <ResumeUpload
             onUpload={(id) => setResumeFileId(id as Id<"_storage">)}
@@ -64,7 +52,6 @@ export default function JobApplyForm({ jobId, onSuccess, disabled }: Props) {
             You’ve already applied — upload disabled.
           </div>
         )}
-      </div>
 
       <Button
         type="submit"

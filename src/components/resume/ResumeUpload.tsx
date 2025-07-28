@@ -84,38 +84,9 @@ export default function ResumeUpload({ applicationId, onUpload }: Props) {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="border-l-4 border-green-500 pl-6 mb-8">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-green-400 to-gray-300 bg-clip-text text-transparent tracking-wide">
-          RESUME SUBMISSION
-        </h3>
-        <p className="text-gray-400 text-sm font-light mt-2 tracking-wide">
-          Submit your credentials for Doom's evaluation
-        </p>
-      </div>
+
 
       {/* Job Application Section */}
-      <div className="bg-gray-950/40 border border-gray-800/50 p-8 mb-8">
-        <div className="space-y-4">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-2 h-8 bg-gradient-to-b from-green-500 to-gray-500"></div>
-            <h2 className="text-2xl font-bold text-green-300 tracking-wide">
-              APPLYING FOR: [SPECIFY JOB NAME HERE]
-            </h2>
-          </div>
-          
-          <div className="border-l-2 border-gray-700 pl-6">
-            <h4 className="text-lg font-medium text-gray-300 mb-3 tracking-wide">
-              POSITION DESCRIPTION
-            </h4>
-            <div className="text-gray-400 leading-relaxed space-y-3">
-              <p>[Job description content will appear here as specified below]</p>
-              <p className="text-sm text-gray-500 italic">
-                "Doom seeks only the most capable candidates for his domain"
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Upload Area */}
       <div

@@ -96,3 +96,13 @@ export const getJobsByInterviewer = query({
     return jobs;
   },
 });
+
+// convex/jobs.ts
+export const getJobsByIds = query({
+  args: { jobIds: v.array(v.id("jobs")) },
+  handler: async (ctx, args) => {
+    return Promise.all(
+      args.jobIds.map((id) => ctx.db.get(id))
+    );
+  },
+});

@@ -47,9 +47,13 @@ export default function ApplyPage() {
 
   if (job === undefined || existingApplication === undefined) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-2">
-        <LoaderUI />
-        <p className="text-sm text-muted-foreground">Fetching job details...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3">
+          <LoaderUI />
+          <p className="text-sm text-blue-200 font-mono tracking-wide">
+            Loading job details...
+          </p>
+        </div>
       </div>
     );
   }
@@ -57,21 +61,50 @@ export default function ApplyPage() {
   const alreadyApplied = existingApplication && existingApplication.length > 0;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10 space-y-6">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold">{job?.title}</h1>
-        <p className="text-muted-foreground">{job?.description}</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        {/* Header Section */}
+        <div className="mb-10">
+          <div className="bg-slate-800/40 backdrop-blur-sm border border-blue-800/30 rounded-lg p-8 shadow-2xl">
+            <h1 className="text-4xl font-black text-blue-100 mb-4 font-mono tracking-tight leading-tight">
+              {job?.title}
+            </h1>
+            <div className="h-1 w-20 bg-gradient-to-r from-blue-400 to-blue-600 mb-6"></div>
+            <p className="text-blue-200/80 text-lg leading-relaxed font-light">
+              {job?.description}
+            </p>
+          </div>
+        </div>
 
-      <JobApplyForm
-        jobId={jobId as Id<"jobs">}
-        onSuccess={() => {
-          setIsApplying(true); // ✅ prevent redirect during revalidation
-          toast.success("Application submitted!");
-          router.push("/applications");
-        }}
-        disabled={alreadyApplied}
-      />
+        {/* Application Form Section */}
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-blue-700/30 rounded-lg p-8 shadow-2xl">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-blue-100 mb-2 font-mono tracking-wide">
+              Submit Application
+            </h2>
+            <div className="h-0.5 w-full bg-gradient-to-r from-blue-500/50 to-transparent"></div>
+          </div>
+
+          <JobApplyForm
+            jobId={jobId as Id<"jobs">}
+            onSuccess={() => {
+              setIsApplying(true);
+              toast.success("Application submitted successfully!");
+              router.push("/applications");
+            }}
+            disabled={alreadyApplied}
+          />
+        </div>
+
+        {/* Status Message */}
+        {alreadyApplied && (
+          <div className="mt-6 bg-blue-800/30 border border-blue-600/50 rounded-lg p-4">
+            <p className="text-blue-200 text-center font-mono text-sm tracking-wide">
+              Application already submitted for this position
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

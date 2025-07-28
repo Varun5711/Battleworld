@@ -14,6 +14,7 @@ import { SignedIn, SignedOut, SignIn, ClerkLoaded, ClerkLoading } from "@clerk/n
 import Loader from "@/components/shared/LoaderUI";
 import NavbarWrapper from "@/components/shared/NavbarWrapper";
 import SyncClerkUser from "@/components/SyncClerkUser";
+import ClickSpark from "@/components/shared/ClickSpark";
 
 const geistSans = localFont({
   src: "./fonts/GeistVFfont.woff",
@@ -43,32 +44,40 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <ClerkLoading>
-              <Loader />
-            </ClerkLoading>
+            <ClickSpark
+              sparkColor="#fff"
+              sparkSize={10}
+              sparkRadius={15}
+              sparkCount={8}
+              duration={400}
+            >
+              <ClerkLoading>
+                <Loader />
+              </ClerkLoading>
 
-            <ClerkLoaded>
-              <SignedIn>
-                <SyncClerkUser />
-                <StreamVideoProvider>
-                  <div className="min-h-screen flex flex-col">
-                    <NavbarWrapper />
-                    <main className="flex-1 px-4 sm:px-6 lg:px-8">
-                      <PageTransitionWrapper>{children}</PageTransitionWrapper>
-                    </main>
-                  </div>
-                </StreamVideoProvider>
-              </SignedIn>
+              <ClerkLoaded>
+                <SignedIn>
+                  <SyncClerkUser />
+                  <StreamVideoProvider>
+                    <div className="min-h-screen flex flex-col">
+                      <NavbarWrapper />
+                      <main className="flex-1">
+                        <PageTransitionWrapper>{children}</PageTransitionWrapper>
+                      </main>
+                    </div>
+                  </StreamVideoProvider>
+                </SignedIn>
 
-              <SignedOut>
-                <SignIn routing="hash"/>
-              </SignedOut>
-            </ClerkLoaded>
+                <SignedOut>
+                  <SignIn routing="hash" />
+                </SignedOut>
+              </ClerkLoaded>
+            </ClickSpark>
           </ThemeProvider>
 
           <ToasterClient />
         </body>
       </html>
     </ConvexClerkProvider>
-  );
+  )
 }

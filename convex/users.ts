@@ -153,3 +153,18 @@ export const setUserRole = mutation({
     });
   },
 });
+
+// convex/users.ts
+export const getUsersByClerkIds = query({
+  args: { clerkIds: v.array(v.string()) },
+  handler: async (ctx, args) => {
+    return Promise.all(
+      args.clerkIds.map((id) =>
+        ctx.db
+          .query("users")
+          .filter((q) => q.eq(q.field("clerkId"), id))
+          .unique()
+      )
+    );
+  },
+});

@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useCandidate } from "@/hooks/useCandidate";
-import { EditIcon, UserIcon, BrainIcon, ShieldIcon, SwordIcon, TargetIcon, CheckIcon, XIcon } from "lucide-react";
+import { Edit2, Check, X } from "lucide-react";
 
 const skillsList = [
   "React.js",
@@ -100,362 +100,290 @@ export default function CandidateProfilePage() {
 
   if (!clerkId) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-zinc-900 via-gray-900 to-black flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin mx-auto"></div>
-          <p className="text-xl text-gray-300 font-light tracking-wide">Loading your profile...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950/30 to-slate-950 flex items-center justify-center font-mono">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg text-blue-200 font-medium">LOADING_PROFILE...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-900 via-gray-900 to-black">
-      {/* Header Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/10 via-transparent to-blue-900/10"></div>
-        <div className="relative max-w-6xl mx-auto px-8 pt-20 pb-16">
-          <div className="flex items-center justify-between">
-            <div className="space-y-6">
-              <h1 className="text-7xl font-thin tracking-tight bg-gradient-to-br from-blue-400 via-blue-300 to-white bg-clip-text text-transparent drop-shadow-2xl" 
-                  style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif" }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950/30 to-slate-950 text-white font-mono">
+      
+      {/* Subtle background effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/3 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-600/2 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="w-full px-8 pt-16 pb-12">
+          <div className="flex items-start justify-between">
+            <div className="space-y-4">
+              <h1 className="text-6xl font-black text-transparent bg-gradient-to-r from-blue-400 via-blue-300 to-blue-600 bg-clip-text font-mono tracking-tight leading-none uppercase">
                 PROFILE
               </h1>
-              <p className="text-2xl font-light text-gray-300 tracking-wide max-w-2xl leading-relaxed">
-                Your professional identity and technical mastery. Shape your narrative for success.
+              <p className="text-xl text-blue-200 font-light max-w-2xl leading-tight font-mono">
+                SHAPE_YOUR_PROFESSIONAL_IDENTITY // SHOWCASE_EXPERTISE
               </p>
             </div>
             
-            <div>
-              {!isEditing ? (
+            {!isEditing ? (
+              <button 
+                onClick={() => setIsEditing(true)}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-8 py-4 rounded-xl font-black font-mono flex items-center gap-3 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25 uppercase tracking-wide"
+              >
+                <Edit2 className="w-5 h-5" />
+                EDIT_PROFILE
+              </button>
+            ) : (
+              <div className="flex gap-4">
                 <button 
-                  onClick={() => setIsEditing(true)}
-                  className="bg-white/5 backdrop-blur-xl border border-white/10 text-white 
-                           px-12 py-4 rounded-full text-lg font-medium tracking-wide flex items-center gap-3
-                           hover:bg-white/10 hover:border-white/20 transition-all duration-500
-                           hover:scale-105 active:scale-95 shadow-2xl hover:shadow-blue-900/20"
+                  onClick={handleCancel}
+                  className="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-6 py-4 rounded-xl font-black font-mono flex items-center gap-3 transition-all duration-300 border border-gray-700 hover:border-gray-600 uppercase tracking-wide"
                 >
-                  <EditIcon className="w-5 h-5" />
-                  Edit Profile
+                  <X className="w-5 h-5" />
+                  CANCEL
                 </button>
-              ) : (
-                <div className="flex gap-4">
-                  <button 
-                    onClick={handleCancel}
-                    className="bg-gray-600/20 backdrop-blur-xl border border-gray-500/30 text-gray-300 
-                             px-8 py-4 rounded-full text-lg font-medium tracking-wide flex items-center gap-3
-                             hover:bg-gray-600/30 hover:border-gray-400/40 transition-all duration-500"
-                  >
-                    <XIcon className="w-5 h-5" />
-                    Cancel
-                  </button>
-                  <button 
-                    onClick={handleSubmit}
-                    className="bg-blue-600/80 backdrop-blur-xl border border-blue-500/60 text-white 
-                             px-8 py-4 rounded-full text-lg font-medium tracking-wide flex items-center gap-3
-                             hover:bg-blue-600/90 hover:border-blue-400/70 transition-all duration-500
-                             hover:scale-105 active:scale-95 shadow-2xl hover:shadow-blue-900/20"
-                  >
-                    <CheckIcon className="w-5 h-5" />
-                    Save Changes
-                  </button>
-                </div>
-              )}
-            </div>
+                <button 
+                  onClick={handleSubmit}
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-6 py-4 rounded-xl font-black font-mono flex items-center gap-3 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25 uppercase tracking-wide"
+                >
+                  <Check className="w-5 h-5" />
+                  SAVE_CHANGES
+                </button>
+              </div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Content Section */}
-      <div className="max-w-[1400px] mx-auto px-8 pb-20">
-        <form onSubmit={handleSubmit} className="space-y-12">
-          
-          {/* Basic Information Card */}
-          <div className="relative bg-gradient-to-br from-gray-900/80 via-zinc-900/90 to-black/95 
-                        backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8 
-                        hover:border-blue-400/40 hover:shadow-2xl hover:shadow-blue-900/20 
-                        transition-all duration-500 overflow-hidden group">
+        {/* Content */}
+        <div className="w-full px-8 pb-16">
+          <div className="space-y-10">
             
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-blue-700/5 
-                          opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-            
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500/0 via-blue-400/60 to-blue-500/0 
-                          rounded-t-2xl group-hover:via-blue-300/80 transition-all duration-500"></div>
-            
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                  <UserIcon className="w-6 h-6 text-blue-400" />
+            {/* Basic Information */}
+            <div className="group relative w-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-blue-400/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                              <div className="relative bg-gradient-to-br from-slate-900/90 via-slate-800/90 to-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 hover:border-slate-600/50 transition-all duration-300">
+                <div className="mb-8">
+                  <h2 className="text-3xl font-black text-transparent bg-gradient-to-r from-blue-400 via-blue-300 to-blue-600 bg-clip-text font-mono mb-2 tracking-tight leading-none uppercase">
+                    BASIC_INFORMATION
+                  </h2>
+                  <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
                 </div>
-                <h2 className="text-3xl font-thin tracking-wide bg-gradient-to-r from-blue-400 via-blue-300 to-white bg-clip-text text-transparent"
-                    style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif" }}>
-                  Basic Information
-                </h2>
+                
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                    <label className="text-sm font-black font-mono text-blue-300/70 uppercase tracking-wider">
+                      FULL_NAME *
+                    </label>
+                    {isEditing ? (
+                      <Input
+                        className="bg-slate-950/50 border-slate-600 text-white focus:border-blue-500 focus:ring-blue-500/20 text-lg py-6 rounded-xl transition-all duration-300 font-mono"
+                        placeholder="Enter your full name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                      />
+                    ) : (
+                      <div className="text-xl text-white py-4 font-mono font-black uppercase tracking-wide">
+                        {name || "NOT_PROVIDED"}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <label className="text-sm font-black font-mono text-blue-300/70 uppercase tracking-wider">
+                      PREFERRED_ROLE *
+                    </label>
+                    {isEditing ? (
+                      <select
+                        className="w-full bg-slate-950/50 border border-slate-600 text-white focus:border-blue-500 focus:ring-blue-500/20 rounded-xl px-4 py-6 text-lg transition-all duration-300 font-mono"
+                        value={preferredRole}
+                        onChange={(e) => setPreferredRole(e.target.value)}
+                        required
+                      >
+                        <option value="">Select a role</option>
+                        <option value="Frontend Developer">Frontend Developer</option>
+                        <option value="Backend Developer">Backend Developer</option>
+                        <option value="Full Stack Developer">Full Stack Developer</option>
+                        <option value="DevOps Engineer">DevOps Engineer</option>
+                        <option value="Data Engineer">Data Engineer</option>
+                        <option value="Mobile Developer">Mobile Developer</option>
+                        <option value="UI/UX Designer">UI/UX Designer</option>
+                        <option value="Product Manager">Product Manager</option>
+                      </select>
+                    ) : (
+                      <div className="text-xl text-white py-4 font-mono font-black uppercase tracking-wide">
+                        {preferredRole || "NOT_SPECIFIED"}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-              
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <label className="text-sm font-medium text-blue-300 tracking-wide block mb-3">Full Name</label>
+            </div>
+
+            {/* About */}
+            <div className="group relative w-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-blue-400/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+              <div className="relative bg-gradient-to-br from-slate-900/90 via-slate-800/90 to-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 hover:border-slate-600/50 transition-all duration-300">
+                <div className="mb-8">
+                  <h2 className="text-3xl font-black text-transparent bg-gradient-to-r from-blue-400 via-blue-300 to-blue-600 bg-clip-text font-mono mb-2 tracking-tight leading-none uppercase">
+                    ABOUT
+                  </h2>
+                  <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
+                </div>
+                
+                <div className="space-y-3">
+                  <label className="text-sm font-black font-mono text-blue-300/70 uppercase tracking-wider">
+                    PROFESSIONAL_SUMMARY *
+                  </label>
                   {isEditing ? (
-                    <Input
-                      className="bg-blue-950/30 border-blue-800/40 text-blue-100 
-                               focus:border-blue-600/60 focus:ring-blue-600/20
-                               placeholder:text-blue-400/50 text-lg py-4"
-                      placeholder="Your Full Name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                    <Textarea
+                      className="bg-black/50 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500/20 min-h-[140px] text-lg rounded-xl transition-all duration-300 resize-none font-mono"
+                      placeholder="Tell us about your background, experience, and what drives you professionally..."
+                      value={backstory}
+                      onChange={(e) => setBackstory(e.target.value)}
+                      rows={6}
                       required
                     />
                   ) : (
-                    <div className="text-2xl font-light text-gray-100 tracking-wide">{name || "Not provided"}</div>
-                  )}
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium text-blue-300 tracking-wide block mb-3">Preferred Role</label>
-                  {isEditing ? (
-                    <select
-                      className="w-full bg-blue-950/30 border border-blue-800/40 text-blue-100 
-                               focus:border-blue-600/60 focus:ring-blue-600/20 rounded-lg px-4 py-4 text-lg"
-                      value={preferredRole}
-                      onChange={(e) => setPreferredRole(e.target.value)}
-                      required
-                    >
-                      <option value="">Select Preferred Role</option>
-                      <option value="Frontend Developer">Frontend Developer</option>
-                      <option value="Backend Engineer">Backend Engineer</option>
-                      <option value="Fullstack Developer">Fullstack Developer</option>
-                      <option value="DevOps Specialist">DevOps Specialist</option>
-                      <option value="AI/ML Engineer">AI/ML Engineer</option>
-                      <option value="Mobile App Developer">Mobile App Developer</option>
-                      <option value="UI/UX Designer">UI/UX Designer</option>
-                      <option value="Data Engineer">Data Engineer</option>
-                      <option value="Product Engineer">Product Engineer</option>
-                    </select>
-                  ) : (
-                    <div className="text-2xl font-light text-gray-100 tracking-wide">{preferredRole || "Not specified"}</div>
+                    <div className="text-lg text-blue-100 leading-relaxed py-4 font-mono">
+                      {backstory || "NO_SUMMARY_PROVIDED"}
+                    </div>
                   )}
                 </div>
               </div>
             </div>
-            
-            <div className="absolute left-0 top-8 bottom-8 w-1 bg-gradient-to-b from-blue-500/0 via-blue-400/40 to-blue-500/0 
-                          rounded-r-full group-hover:via-blue-300/60 transition-all duration-500"></div>
-          </div>
 
-          {/* Professional Journey Card */}
-          <div className="relative bg-gradient-to-br from-gray-900/80 via-zinc-900/90 to-black/95 
-                        backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8 
-                        hover:border-blue-400/40 hover:shadow-2xl hover:shadow-blue-900/20 
-                        transition-all duration-500 overflow-hidden group">
-            
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-blue-700/5 
-                          opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-            
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500/0 via-blue-400/60 to-blue-500/0 
-                          rounded-t-2xl group-hover:via-blue-300/80 transition-all duration-500"></div>
-            
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                  <BrainIcon className="w-6 h-6 text-blue-400" />
-                </div>
-                <h2 className="text-3xl font-thin tracking-wide bg-gradient-to-r from-blue-400 via-blue-300 to-white bg-clip-text text-transparent"
-                    style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif" }}>
-                  Professional Journey
-                </h2>
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium text-blue-300 tracking-wide block mb-3">Your Story</label>
-                {isEditing ? (
-                  <Textarea
-                    className="bg-blue-950/30 border-blue-800/40 text-blue-100 
-                             focus:border-blue-600/60 focus:ring-blue-600/20
-                             placeholder:text-blue-400/50 min-h-[120px] text-lg"
-                    placeholder="Tell us about your professional journey, background, and interests..."
-                    value={backstory}
-                    onChange={(e) => setBackstory(e.target.value)}
-                    rows={6}
-                    required
-                  />
-                ) : (
-                  <div className="text-lg font-light text-gray-100 leading-relaxed tracking-wide">
-                    {backstory || "No story provided yet."}
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            <div className="absolute left-0 top-8 bottom-8 w-1 bg-gradient-to-b from-blue-500/0 via-blue-400/40 to-blue-500/0 
-                          rounded-r-full group-hover:via-blue-300/60 transition-all duration-500"></div>
-          </div>
-
-          {/* Technical Skills Card */}
-          <div className="relative bg-gradient-to-br from-gray-900/80 via-zinc-900/90 to-black/95 
-                        backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8 
-                        hover:border-blue-400/40 hover:shadow-2xl hover:shadow-blue-900/20 
-                        transition-all duration-500 overflow-hidden group">
-            
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-blue-700/5 
-                          opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-            
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500/0 via-blue-400/60 to-blue-500/0 
-                          rounded-t-2xl group-hover:via-blue-300/80 transition-all duration-500"></div>
-            
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                  <ShieldIcon className="w-6 h-6 text-blue-400" />
-                </div>
-                <h2 className="text-3xl font-thin tracking-wide bg-gradient-to-r from-blue-400 via-blue-300 to-white bg-clip-text text-transparent"
-                    style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif" }}>
-                  Technical Arsenal
-                </h2>
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium text-blue-300 tracking-wide block mb-4">Your Skills & Technologies</label>
-                <div className="flex flex-wrap gap-3">
-                  {skillsList.map((skill) => (
-                    <button
-                      type="button"
-                      key={skill}
-                      onClick={isEditing ? () => togglePower(skill) : undefined}
-                      disabled={!isEditing}
-                      className={`px-4 py-2 rounded-full text-sm font-medium tracking-wide border transition-all duration-300 ${
-                        powers.includes(skill)
-                          ? "bg-blue-600/80 text-white border-blue-500/60 shadow-lg shadow-blue-900/30"
-                          : isEditing
-                          ? "bg-gray-700/50 text-gray-300 border-gray-600/50 hover:bg-gray-600/60 hover:border-gray-500/60"
-                          : "bg-gray-800/30 text-gray-400 border-gray-700/30"
-                      } ${isEditing ? "cursor-pointer hover:scale-105" : "cursor-default"}`}
-                    >
-                      {skill}
-                    </button>
-                  ))}
-                </div>
-                {powers.length === 0 && (
-                  <p className="text-gray-400 font-light mt-4">No skills selected yet.</p>
-                )}
-              </div>
-            </div>
-            
-            <div className="absolute left-0 top-8 bottom-8 w-1 bg-gradient-to-b from-blue-500/0 via-blue-400/40 to-blue-500/0 
-                          rounded-r-full group-hover:via-blue-300/60 transition-all duration-500"></div>
-          </div>
-
-          {/* Growth Areas & Achievements Cards */}
-          <div className="grid md:grid-cols-2 gap-8">
-            
-            {/* Growth Areas Card */}
-            <div className="relative bg-gradient-to-br from-gray-900/80 via-zinc-900/90 to-black/95 
-                          backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8 
-                          hover:border-blue-400/40 hover:shadow-2xl hover:shadow-blue-900/20 
-                          transition-all duration-500 overflow-hidden group">
-              
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-blue-700/5 
-                            opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-              
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500/0 via-blue-400/60 to-blue-500/0 
-                            rounded-t-2xl group-hover:via-blue-300/80 transition-all duration-500"></div>
-              
-              <div className="relative z-10">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
-                    <TargetIcon className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <h3 className="text-2xl font-thin tracking-wide bg-gradient-to-r from-blue-400 via-blue-300 to-white bg-clip-text text-transparent"
-                      style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif" }}>
-                    Growth Areas
-                  </h3>
+            {/* Skills */}
+            <div className="group relative w-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-blue-400/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+              <div className="relative bg-gradient-to-br from-slate-900/90 via-slate-800/90 to-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 hover:border-slate-600/50 transition-all duration-300">
+                <div className="mb-8">
+                  <h2 className="text-3xl font-black text-transparent bg-gradient-to-r from-blue-400 via-blue-300 to-blue-600 bg-clip-text font-mono mb-2 tracking-tight leading-none uppercase">
+                    TECHNICAL_SKILLS
+                  </h2>
+                  <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
                 </div>
                 
-                {isEditing ? (
-                  <Input
-                    className="bg-blue-950/30 border-blue-800/40 text-blue-100 
-                             focus:border-blue-600/60 focus:ring-blue-600/20
-                             placeholder:text-blue-400/50"
-                    placeholder="Areas you'd like to improve (comma-separated)"
-                    value={weaknesses.join(", ")}
-                    onChange={(e) =>
-                      setWeaknesses(e.target.value.split(",").map((s) => s.trim()).filter(s => s))
-                    }
-                  />
-                ) : (
-                  <div className="space-y-2">
-                    {weaknesses.length > 0 ? (
-                      weaknesses.map((weakness, index) => (
-                        <div key={index} className="text-gray-100 font-light tracking-wide">
-                          • {weakness}
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-400 font-light">No growth areas specified.</p>
-                    )}
+                <div className="space-y-6">
+                  <label className="text-sm font-black font-mono text-blue-300/70 uppercase tracking-wider">
+                    SELECT_YOUR_SKILLS *
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    {skillsList.map((skill) => (
+                      <button
+                        type="button"
+                        key={skill}
+                        onClick={isEditing ? () => togglePower(skill) : undefined}
+                        disabled={!isEditing}
+                        className={`px-6 py-3 rounded-xl text-sm font-black font-mono border-2 transition-all duration-300 uppercase tracking-wide ${
+                          powers.includes(skill)
+                            ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white border-blue-500 shadow-lg shadow-blue-500/25"
+                            : isEditing
+                            ? "bg-slate-800/50 text-slate-300 border-slate-600 hover:bg-slate-700/50 hover:border-slate-500 hover:scale-105"
+                            : "bg-slate-800/30 text-slate-400 border-slate-700"
+                        } ${isEditing ? "cursor-pointer" : "cursor-default"}`}
+                      >
+                        {skill}
+                      </button>
+                    ))}
                   </div>
-                )}
-              </div>
-
-              <div className="absolute left-0 top-8 bottom-8 w-1 bg-gradient-to-b from-blue-500/0 via-blue-400/40 to-blue-500/0 
-                            rounded-r-full group-hover:via-blue-300/60 transition-all duration-500"></div>
-            </div>
-
-            {/* Key Achievements Card */}
-            <div className="relative bg-gradient-to-br from-gray-900/80 via-zinc-900/90 to-black/95 
-                          backdrop-blur-xl border border-blue-500/20 rounded-2xl p-8 
-                          hover:border-blue-400/40 hover:shadow-2xl hover:shadow-blue-900/20 
-                          transition-all duration-500 overflow-hidden group">
-              
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-blue-700/5 
-                            opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-              
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500/0 via-blue-400/60 to-blue-500/0 
-                            rounded-t-2xl group-hover:via-blue-300/80 transition-all duration-500"></div>
-              
-              <div className="relative z-10">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
-                    <SwordIcon className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <h3 className="text-2xl font-thin tracking-wide bg-gradient-to-r from-blue-400 via-blue-300 to-white bg-clip-text text-transparent"
-                      style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif" }}>
-                    Key Achievements
-                  </h3>
+                  {powers.length === 0 && (
+                    <p className="text-blue-400/70 text-center py-4 font-mono font-black uppercase tracking-wide">NO_SKILLS_SELECTED</p>
+                  )}
                 </div>
-                
-                {isEditing ? (
-                  <Input
-                    className="bg-blue-950/30 border-blue-800/40 text-blue-100 
-                             focus:border-blue-600/60 focus:ring-blue-600/20
-                             placeholder:text-blue-400/50"
-                    placeholder="Notable projects or challenges (comma-separated)"
-                    value={keyBattles.join(", ")}
-                    onChange={(e) =>
-                      setKeyBattles(e.target.value.split(",").map((s) => s.trim()).filter(s => s))
-                    }
-                  />
-                ) : (
-                  <div className="space-y-2">
-                    {keyBattles.length > 0 ? (
-                      keyBattles.map((battle, index) => (
-                        <div key={index} className="text-gray-100 font-light tracking-wide">
-                          • {battle}
-                        </div>
-                      ))
+              </div>
+            </div>
+
+            {/* Additional Information */}
+            <div className="grid lg:grid-cols-2 gap-8 w-full">
+              
+              {/* Areas for Growth */}
+              <div className="group relative">
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-blue-400/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                <div className="relative bg-gradient-to-br from-slate-900/90 via-slate-800/90 to-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 hover:border-slate-600/50 transition-all duration-300 h-full">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-black text-transparent bg-gradient-to-r from-blue-400 via-blue-300 to-blue-600 bg-clip-text font-mono mb-2 tracking-tight leading-none uppercase">
+                      AREAS_FOR_GROWTH
+                    </h3>
+                    <div className="w-12 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {isEditing ? (
+                      <Input
+                        className="bg-slate-950/50 border-slate-600 text-white focus:border-blue-500 focus:ring-blue-500/20 text-base py-4 rounded-xl transition-all duration-300 font-mono"
+                        placeholder="e.g., Machine Learning, System Design"
+                        value={weaknesses.join(", ")}
+                        onChange={(e) =>
+                          setWeaknesses(e.target.value.split(",").map((s) => s.trim()).filter(s => s))
+                        }
+                      />
                     ) : (
-                      <p className="text-gray-400 font-light">No achievements listed yet.</p>
+                      <div className="space-y-3">
+                        {weaknesses.length > 0 ? (
+                          weaknesses.map((weakness, index) => (
+                            <div key={index} className="text-blue-100 flex items-center gap-3 font-mono">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              {weakness}
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-gray-400 text-center py-4 font-mono font-black uppercase tracking-wide">NOT_SPECIFIED</p>
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
+                </div>
               </div>
 
-              <div className="absolute left-0 top-8 bottom-8 w-1 bg-gradient-to-b from-blue-500/0 via-blue-400/40 to-blue-500/0 
-                            rounded-r-full group-hover:via-blue-300/60 transition-all duration-500"></div>
+              {/* Key Projects */}
+              <div className="group relative">
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-blue-400/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                <div className="relative bg-gradient-to-br from-gray-900/90 via-gray-800/90 to-gray-900/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 hover:border-gray-600/50 transition-all duration-300 h-full">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-black font-mono bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-2 tracking-tighter uppercase">
+                      KEY_PROJECTS
+                    </h3>
+                    <div className="w-12 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {isEditing ? (
+                      <Input
+                        className="bg-black/50 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500/20 text-base py-4 rounded-xl transition-all duration-300 font-mono"
+                        placeholder="e.g., E-commerce Platform, Mobile App"
+                        value={keyBattles.join(", ")}
+                        onChange={(e) =>
+                          setKeyBattles(e.target.value.split(",").map((s) => s.trim()).filter(s => s))
+                        }
+                      />
+                    ) : (
+                      <div className="space-y-3">
+                        {keyBattles.length > 0 ? (
+                          keyBattles.map((battle, index) => (
+                            <div key={index} className="text-gray-100 flex items-center gap-3 font-mono">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              {battle}
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-gray-400 text-center py-4 font-mono font-black uppercase tracking-wide">NO_PROJECTS_LISTED</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
 
-        </form>
+          </div>
+        </div>
       </div>
     </div>
   );

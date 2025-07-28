@@ -18,13 +18,6 @@ export default defineSchema({
     preferredRole: v.optional(v.string()),
 
     location: v.optional(v.string()),
-    // experience: v.optional(v.string()),
-    // education: v.optional(v.string()),
-    // github: v.optional(v.string()),
-    // linkedin: v.optional(v.string()),
-    // portfolio: v.optional(v.string()),
-    // skills: v.optional(v.string()),
-    // about: v.optional(v.string()),
   }).index("by_clerk_id", ["clerkId"]),
 
   // JOBS TABLE
@@ -63,6 +56,7 @@ export default defineSchema({
     candidateId: v.string(),
     meetingLink: v.optional(v.string()),
     interviewerIds: v.array(v.string()),
+    result: v.optional(v.boolean()),
   })
     .index("by_candidate_id", ["candidateId"])
     .index("by_stream_call_id", ["streamCallId"]),
