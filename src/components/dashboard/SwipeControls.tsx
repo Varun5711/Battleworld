@@ -45,14 +45,7 @@ export default function SwipeControls({
     try {
       await updateStatus({ applicationId, status: "shortlisted" });
   
-      const interview = await createInterview({
-        candidateId,
-        title: `Executive Interview: ${candidateName}`,
-        startTime: Date.now() + 3600 * 1000,
-        status: "scheduled",
-        streamCallId: "",
-        interviewerIds: [],
-      });
+  
   
       const emailResponse = await fetch("/api/send-email", {
         method: "POST",
@@ -63,7 +56,7 @@ export default function SwipeControls({
           to: candidateEmail,
           subject: "Application Update - Next Steps",
           body: `Dear ${candidateName},\n\nThank you for your application. After careful review, we're pleased to invite you to the next stage of our selection process.\n\nYour interview will be scheduled shortly. We look forward to discussing your qualifications in detail.\n\nBest regards,\nDoom Industries Talent Team`,
-          interviewId: interview,
+          // interviewId: interview,
         }),
       });
   

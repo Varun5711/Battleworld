@@ -205,7 +205,7 @@ function InterviewScheduleUI() {
     // Find candidate information
     const candidate = users.find((u) => u.clerkId === interview.candidateId);
     if (!candidate) {
-      toast.error("❌ Candidate not found in system");
+      toast.error("Candidate not found in system");
       // Clear processing state on error
       setProcessingInterviews((prev) => ({ ...prev, [interview._id]: null }));
       return;
@@ -215,15 +215,15 @@ function InterviewScheduleUI() {
       // Show immediate feedback
       toast.loading(
         result === "pass"
-          ? `🚀 Processing PASS for ${candidate.name} and sending email...`
-          : `📧 Processing FAIL for ${candidate.name} and sending email...`,
+          ? `Processing PASS for ${candidate.name} and sending email...`
+          : `Processing FAIL for ${candidate.name} and sending email...`,
         { duration: 3000 }
       );
 
       // Prepare comprehensive email content
       const emailSubject =
         result === "pass"
-          ? `🎉 Congratulations ${candidate.name} - You've Advanced to the Next Stage!`
+          ? `Congratulations ${candidate.name} - You've Advanced to the Next Stage!`
           : `Thank You for Your Time - ${candidate.name}`;
 
       const emailBody =

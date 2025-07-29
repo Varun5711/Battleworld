@@ -6,14 +6,101 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import DoomModal from "@/components/auth/DoomModal";
-import Lightning from "@/components/home/Lightning";
+import Aurora from "../../components/shared/Aurora";
+
+interface Review {
+  name: string;
+  username: string;
+  body: string;
+  img: string;
+}
+
+const reviews: Review[] = [
+  {
+    name: "Stark Industries",
+    username: "@starkindustries",
+    body: "BattleWorld gave our team the edge we needed to innovate faster and smarter. From strategy to execution, it's been a game-changer.",
+    img: "https://avatar.vercel.sh/stark",
+  },
+  {
+    name: "Wakanda",
+    username: "@wakanda",
+    body: "Thanks to BattleWorld, our warriors trained in simulated scenarios that pushed their limits. Vibranium wasn't our only weapon anymore.",
+    img: "https://avatar.vercel.sh/wakanda",
+  },
+  {
+    name: "LexCorp",
+    username: "@dc",
+    body: "BattleWorld was the perfect simulation to test both might and intellect. We don't just survive—we dominate. Credit goes to the battlefield that made us sharper.",
+    img: "https://avatar.vercel.sh/lex",
+  },
+  {
+    name: "Wayne Enterprises",
+    username: "@wayne",
+    body: "BattleWorld exposed our weaknesses before the real enemies could. That kind of insight is priceless.",
+    img: "https://avatar.vercel.sh/wayne",
+  },
+  {
+    name: "Hydra",
+    username: "@hydra",
+    body: "Cut off one head, two more train in BattleWorld. Our resurgence is no accident.",
+    img: "https://avatar.vercel.sh/hydra",
+  },
+  {
+    name: "S.H.I.E.L.D.",
+    username: "@shield",
+    body: "With BattleWorld, our agents faced the unexpected—and won. Preparedness is our superpower.",
+    img: "https://avatar.vercel.sh/shield",
+  },
+];
+
+const ReviewCard = ({ review }: { review: Review }) => (
+  <div className="flex-shrink-0 w-80 mx-4 p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-300">
+    <div className="flex items-center gap-3 mb-4">
+      <img
+        src={review.img}
+        alt={review.name}
+        className="w-10 h-10 rounded-full border border-white/20"
+      />
+      <div>
+        <h3 className="font-mono text-sm font-semibold text-white">
+          {review.name}
+        </h3>
+        <p className="font-mono text-xs text-gray-400">{review.username}</p>
+      </div>
+    </div>
+    <p className="font-mono text-sm text-gray-300 leading-relaxed">
+      "{review.body}"
+    </p>
+  </div>
+);
+
+const MarqueeReviews = () => {
+  return (
+    <div className="relative overflow-hidden py-12">
+      <div className="flex animate-marquee">
+        {/* First set of reviews */}
+        {reviews.map((review, index) => (
+          <ReviewCard key={`first-${index}`} review={review} />
+        ))}
+        {/* Duplicate set for seamless loop */}
+        {reviews.map((review, index) => (
+          <ReviewCard key={`second-${index}`} review={review} />
+        ))}
+      </div>
+
+      {/* Fade gradients */}
+      <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-black to-transparent z-10" />
+      <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-black to-transparent z-10" />
+    </div>
+  );
+};
 
 export default function HomePage() {
   const router = useRouter();
   const { user } = useUser();
 
   const [showDoomModal, setShowDoomModal] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoaded, setIsLoaded] = useState(false);
 
   const dbUser = useQuery(
@@ -36,196 +123,158 @@ export default function HomePage() {
 
   useEffect(() => {
     setIsLoaded(true);
-    const handleMouseMove = (e: any) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-black text-white">
-      {/* Lightning Background */}
-      <div className="absolute inset-0 z-0">
-        <Lightning
-          hue={120}
-          xOffset={0}
-          speed={0.8}
-          intensity={0.4}
-          size={1.2}
-        />
-        <Lightning
-          hue={280}
-          xOffset={100}
-          speed={0.5}
-          intensity={0.3}
-          size={0.8}
-        />
-      </div>
+    <>
+      <style jsx global>{`
+        @keyframes marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
 
-      {/* Mouse Glow */}
-      <div
-        className="absolute inset-0 z-5 pointer-events-none"
-        style={{
-          background: `radial-gradient(800px circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(34, 197, 94, 0.08) 0%, rgba(156, 163, 175, 0.04) 50%, transparent 100%)`,
-        }}
-      />
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/60 z-10" />
+        .animate-marquee:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
 
-      {/* Main Content */}
-      <div className="relative z-20 min-h-screen px-12 py-24 max-w-7xl mx-auto">
-        {/* Header */}
-        <div
-          className={`mb-32 transform transition-all duration-1500 ${isLoaded ? "translate-y-0 opacity-100" : "-translate-y-12 opacity-0"}`}
-        >
-          <div className="flex items-center mb-8">
-            <div className="w-2 h-16 bg-gradient-to-b from-green-500 to-gray-500 mr-8"></div>
-            <h1 className="text-7xl font-black bg-gradient-to-r from-green-400 via-gray-300 to-green-500 bg-clip-text text-transparent leading-tight tracking-tight">
-              BATTLEWORLD
-            </h1>
-          </div>
-          <p className="text-2xl font-light text-gray-300 max-w-2xl leading-relaxed ml-10">
-            Welcome to the ultimate arena where legends are forged
-          </p>
+      <div className="relative w-full min-h-screen overflow-hidden bg-black text-white">
+        {/* Aurora Background */}
+        <div className="absolute inset-0 z-0">
+          <Aurora
+            colorStops={["#005F3C", "#00FFAA", "#1B1B1B", "#C0C0C0"]}
+            blend={2}
+            amplitude={0.45}
+            speed={1}
+          />
         </div>
 
-        {/* Buttons Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 mb-32">
-          {/* Left Quote */}
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/40 z-10" />
+
+        {/* Main Content */}
+        <div className="relative z-20 min-h-screen flex flex-col justify-center px-8 max-w-5xl mx-auto">
+          {/* Header */}
           <div
-            className={`transform transition-all duration-1500 delay-300 ${isLoaded ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"}`}
+            className={`text-center mb-16 transform transition-all duration-1000 ${
+              isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            }`}
           >
-            <div className="border-l-4 border-green-500 pl-8">
-              <blockquote className="text-2xl font-light text-gray-300 italic mb-8 leading-relaxed">
-                "Heroes seek glory. Villains demand legacy.
-                <br />
-                In this multiversal realm, Doom decides who's worthy."
-              </blockquote>
-              <div className="w-24 h-px bg-gradient-to-r from-green-500 to-transparent"></div>
-            </div>
+            <h1 className="text-8xl font-black font-mono tracking-tighter mb-6 bg-gradient-to-r from-green-400 via-gray-500 to-gray-300 bg-clip-text text-transparent">
+              BATTLEWORLD
+            </h1>
+            <p className="text-xl font-mono text-gray-300 tracking-wide">
+              Ultimate Arena
+            </p>
           </div>
 
-          {/* Right Buttons */}
+          {/* Action Buttons */}
           <div
-            className={`flex flex-col gap-8 transform transition-all duration-1500 delay-500 ${isLoaded ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"}`}
+            className={`flex flex-col sm:flex-row gap-6 justify-center items-center mb-20 transform transition-all duration-1000 delay-300 ${
+              isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            }`}
           >
             {!dbUser?.role || dbUser.role === "candidate" ? (
               <>
                 <button
                   onClick={() => router.push("/signup")}
-                  className="group relative bg-black/50 backdrop-blur-sm border border-gray-800/60 hover:border-gray-600/80 text-white px-8 py-4 font-medium tracking-wide transition-all duration-500 hover:bg-black/70"
+                  className="group px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all duration-300 font-mono text-sm tracking-wider uppercase"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-100 group-hover:text-white transition-colors">
-                      Hero Registration
-                    </span>
-                    <div className="w-2 h-2 border border-gray-600 rotate-45 group-hover:border-gray-400 group-hover:translate-x-1 transition-all duration-300"></div>
-                  </div>
+                  <span className="group-hover:text-white transition-colors">
+                    Hero Registration
+                  </span>
                 </button>
 
                 <button
                   onClick={() => setShowDoomModal(true)}
-                  className="group relative bg-gradient-to-r from-green-950/20 to-gray-950/20 backdrop-blur-sm border border-green-800/40 hover:border-green-600/60 text-white px-8 py-4 font-medium tracking-wide transition-all duration-500 hover:from-green-950/30 hover:to-gray-950/30"
+                  className="group px-8 py-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/30 hover:from-blue-600/30 hover:to-purple-600/30 hover:border-blue-400/50 transition-all duration-300 font-mono text-sm tracking-wider uppercase"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-green-100 group-hover:text-green-50 transition-colors">
-                      Doom's Tribunal
-                    </span>
-                    <div className="w-2 h-2 border border-green-700 rotate-45 group-hover:border-green-500 group-hover:translate-x-1 transition-all duration-300"></div>
-                  </div>
+                  <span className="group-hover:text-blue-100 transition-colors">
+                    Doom's Tribunal
+                  </span>
                 </button>
               </>
             ) : dbUser.role === "interviewer" ? (
               <button
                 onClick={() => router.push("/dashboard")}
-                className="bg-emerald-700 hover:bg-emerald-600 text-white px-8 py-4 rounded transition"
+                className="px-8 py-4 bg-emerald-600/20 backdrop-blur-sm border border-emerald-500/30 hover:bg-emerald-600/30 hover:border-emerald-400/50 transition-all duration-300 font-mono text-sm tracking-wider uppercase"
               >
-                Enter Doom’s Dashboard
+                Enter Dashboard
               </button>
             ) : null}
           </div>
-        </div>
 
-        {/* Quote */}
-        <div
-          className={`flex justify-end mb-24 transform transition-all duration-1500 delay-700 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-        >
-          <div className="bg-slate-900/40 backdrop-blur-lg border border-slate-700/50 p-12 max-w-4xl border-r-4 border-r-green-500">
-            <blockquote className="text-2xl font-light text-gray-300 italic mb-8 text-right">
-              "In a world torn by chaos, Doom interviews not to hire... but to
-              judge."
-            </blockquote>
-            <div className="w-32 h-px bg-gradient-to-l from-green-500 to-transparent ml-auto mb-8" />
-            <p className="text-lg font-light text-gray-400 leading-relaxed text-right">
-              Your resume is your weapon. Your courage, your shield.
-              <br />
-              Welcome to the final interview of your life.
-            </p>
-          </div>
-        </div>
-
-        {/* Footer Tech */}
-        <div
-          className={`transform transition-all duration-1500 delay-900 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-        >
-          <div className="flex items-center gap-8 text-gray-500 text-sm font-light">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 border border-green-500/50 bg-green-500/20"></div>
-              <span className="text-gray-400 uppercase tracking-wider">
-                Powered by
-              </span>
-            </div>
-            <div className="flex items-center gap-8">
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-1 bg-blue-400 animate-pulse"></div>
-                <span className="text-blue-300 font-medium tracking-wide">
-                  Clerk
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-1 bg-green-400 animate-pulse"></div>
-                <span className="text-green-300 font-medium tracking-wide">
-                  ConvexDB
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-1 bg-purple-400 animate-pulse"></div>
-                <span className="text-purple-300 font-medium tracking-wide">
-                  Stream.io
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Floating Effects */}
-      <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden">
-        {[...Array(12)].map((_, i) => (
+          {/* Quote */}
           <div
-            key={i}
-            className={`absolute w-1 h-1 ${i % 2 === 0 ? "bg-green-400/30" : "bg-gray-400/20"} animate-pulse`}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${4 + Math.random() * 6}s`,
-            }}
-          />
-        ))}
-      </div>
+            className={`text-center max-w-3xl mx-auto mb-20 transform transition-all duration-1000 delay-500 ${
+              isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            }`}
+          >
+            <blockquote className="text-2xl font-mono font-light text-gray-300 italic mb-4 leading-relaxed">
+              "Heroes seek glory. Villains demand legacy."
+            </blockquote>
+            <div className="w-16 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto" />
+          </div>
 
-      {/* Doom Modal */}
-      {showDoomModal && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm">
-          <DoomModal onClose={() => setShowDoomModal(false)} />
+          {/* Reviews Marquee */}
+          <div
+            className={`mb-20 transform transition-all duration-1000 delay-600 ${
+              isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            }`}
+          >
+            <MarqueeReviews />
+          </div>
+
+          {/* Footer Tech */}
+          <div
+            className={`flex flex-col items-center gap-3 transform transition-all duration-1000 delay-700 ${
+              isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            }`}
+          >
+            <div className="flex items-center gap-6 text-xs font-mono text-gray-500 uppercase tracking-widest">
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-1 bg-blue-400 rounded-full animate-pulse" />
+                <span>Clerk</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-1 bg-green-400 rounded-full animate-pulse" />
+                <span>ConvexDB</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-1 bg-purple-400 rounded-full animate-pulse" />
+                <span>Stream.io</span>
+              </div>
+            </div>
+
+            <div className="text-xs font-mono text-gray-500 tracking-wide">
+              Made with passion by{" "}
+              <a
+                href="https://github.com/Varun5711"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-white transition-colors"
+              >
+                Varun
+              </a>
+            </div>
+          </div>
         </div>
-      )}
-    </div>
+
+        {/* Doom Modal */}
+        {showDoomModal && (
+          <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm">
+            <DoomModal onClose={() => setShowDoomModal(false)} />
+          </div>
+        )}
+      </div>
+    </>
   );
 }

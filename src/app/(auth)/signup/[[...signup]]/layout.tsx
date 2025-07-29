@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign Up | CodePair",
+  title: "Sign Up | BattleWorld",
   description: "Join the Multiverse as a Hero or Doom",
 };
 

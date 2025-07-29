@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     `;
 
     await transporter.sendMail({
-      from: `"CodePair Team" <${process.env.EMAIL_USER}>`,
+      from: `"BattleWorld Team" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
