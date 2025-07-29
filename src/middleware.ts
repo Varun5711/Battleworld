@@ -1,7 +1,9 @@
+// src/middleware.ts
+
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const interviewerRoutes = ["/dashboard", "/recordings", "/schedule"];
+const protectedRoutes = ["/dashboard", "/recordings", "/schedule"];
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId, sessionClaims } = await auth();
@@ -15,7 +17,7 @@ export default clerkMiddleware(async (auth, req) => {
 
   const role = (sessionClaims?.publicMetadata as { role?: string })?.role;
 
-  if (interviewerRoutes.some(route => path.startsWith(route)) && role !== "interviewer") {
+  if (protectedRoutes.some(route => path.startsWith(route)) && role !== "interviewer") {
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
