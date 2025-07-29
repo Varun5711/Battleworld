@@ -93,7 +93,7 @@ function DockItem({
       aria-haspopup="true"
     >
       {Children.map(children, (child) =>
-        cloneElement(child as React.ReactElement, { isHovered })
+        cloneElement(child as React.ReactElement<any>, { isHovered })
       )}
     </motion.div>
   );
@@ -102,13 +102,15 @@ function DockItem({
 type DockLabelProps = {
   className?: string;
   children: React.ReactNode;
+  isHovered?: MotionValue<number>;
 };
 
-function DockLabel({ children, className = "", ...rest }: DockLabelProps) {
-  const { isHovered } = rest as { isHovered: MotionValue<number> };
+function DockLabel({ children, className = "", isHovered }: DockLabelProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (!isHovered) return;
+    
     const unsubscribe = isHovered.on("change", (latest) => {
       setIsVisible(latest === 1);
     });
@@ -137,6 +139,7 @@ function DockLabel({ children, className = "", ...rest }: DockLabelProps) {
 type DockIconProps = {
   className?: string;
   children: React.ReactNode;
+  isHovered?: MotionValue<number>; // Added for consistency, though not used
 };
 
 function DockIcon({ children, className = "" }: DockIconProps) {
@@ -162,7 +165,7 @@ export default function Dock({
 
   const maxHeight = useMemo(
     () => Math.max(dockHeight, magnification + magnification / 2 + 4),
-    [magnification]
+    [magnification, dockHeight]
   );
   const heightRow = useTransform(isHovered, [0, 1], [panelHeight, maxHeight]);
   const height = useSpring(heightRow, spring);
