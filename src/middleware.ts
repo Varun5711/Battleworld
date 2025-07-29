@@ -9,9 +9,9 @@ export default clerkMiddleware(async (auth, req) => {
   const url = req.nextUrl;
   const path = url.pathname;
 
-  if (!userId) {
-    return NextResponse.redirect(new URL("/sign-in", req.url));
-  }
+  // if (!userId) {
+  //   return NextResponse.redirect(new URL("/sign-in", req.url));
+  // }
 
   const role = (sessionClaims?.publicMetadata as { role?: string })?.role;
 
