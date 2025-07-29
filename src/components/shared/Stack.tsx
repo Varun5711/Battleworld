@@ -81,7 +81,7 @@ export default function Stack({
   );
 
   const sendToBack = (id: number) => {
-    setCards((prev) => {
+    setCards((prev:any) => {
       const newCards = [...prev];
       const index = newCards.findIndex((card) => card.id === id);
       const [card] = newCards.splice(index, 1);
@@ -128,7 +128,6 @@ export default function Stack({
               }}
             >
               <img
-                src={card.img}
                 alt={`card-${card.id}`}
                 className="w-full h-full object-cover pointer-events-none"
               />
