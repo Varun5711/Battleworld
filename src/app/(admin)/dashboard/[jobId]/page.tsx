@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { useParams } from "next/navigation";
 import SwipeControls from "@/components/dashboard/SwipeControls";
 import { Id } from "@/../convex/_generated/dataModel"; // adjust path if needed
