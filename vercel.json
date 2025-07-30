@@ -1,0 +1,40 @@
+{
+    "rewrites": [
+      {
+        "source": "/sign-in",
+        "destination": "/sign-in"
+      },
+      {
+        "source": "/sso-callback",
+        "destination": "/sso-callback"
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/",
+        "has": [
+          {
+            "type": "cookie",
+            "key": "__clerk_session"
+          }
+        ],
+        "destination": "/dashboard",
+        "permanent": false
+      }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "s-maxage=31536000, stale-while-revalidate"
+          },
+          {
+            "key": "Content-Encoding",
+            "value": "gzip"
+          }
+        ]
+      }
+    ]
+  }
