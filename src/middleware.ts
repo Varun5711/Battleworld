@@ -8,15 +8,15 @@ export default clerkMiddleware(async (auth, req) => {
   const url = req.nextUrl;
   const path = url.pathname;
 
-  // Optional: redirect unauthenticated users to sign-in
-  if (!userId && !path.startsWith("/sign-in") && !path.startsWith("/sso-callback")) {
-    return NextResponse.redirect(new URL("/sign-in", req.url));
-  }
-
   const role = (sessionClaims?.publicMetadata as { role?: string })?.role;
 
-  if (interviewerRoutes.some(route => path.startsWith(route)) && role !== "interviewer") {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
+  if (interviewerRoutes.some(route => path.startsWith(route))) {
+    if (!userId) {
+      return NextResponse.redirect(new URL("/sign-in", req.url));
+    }
+    if (role !== "interviewer") {
+      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    }
   }
 
   return NextResponse.next();
@@ -24,9 +24,7 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    "/sign-in(.*)",
-    "/sso-callback(.*)",
-    "/((?!_next|.*\\.(?:js|css|svg|png|jpg|jpeg|webp|ttf|woff2?|ico|json|txt)).*)",
+    "/((?!_next|_static|.*\\.(?:png|jpg|jpeg|svg|webp|ico|ttf|woff2?|css|js|json)).*)",
     "/(api|trpc)(.*)",
   ],
 };
