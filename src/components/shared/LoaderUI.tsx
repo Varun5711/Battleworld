@@ -91,7 +91,7 @@ export default function LoaderUI() {
           <div className="text-gray-500 text-sm font-light leading-relaxed animate-pulse">
             <p className="mb-4">Accessing Latverian networks...</p>
             <p className="mb-4 text-green-400/80">Doom's systems online</p>
-            <p className="text-gray-400 italic">
+            <p className="text-gray-400">
               "Patience, mortal. Doom's domain loads for no one."
             </p>
           </div>
