@@ -778,7 +778,13 @@ function InterviewScheduleUI() {
                           onSelect={(date) =>
                             date && setFormData({ ...formData, date })
                           }
-                          disabled={(date) => date < new Date()}
+                          disabled={(date) => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0); // Reset time to start of day for comparison
+                            const compareDate = new Date(date);
+                            compareDate.setHours(0, 0, 0, 0);
+                            return compareDate < today; // Allow today and future dates
+                          }}
                           className="bg-slate-800/40 border border-green-700/50 rounded-lg mt-2 font-mono text-green-100"
                         />
                       </div>
@@ -798,16 +804,31 @@ function InterviewScheduleUI() {
                           </SelectTrigger>
                           <SelectContent className="bg-slate-900/95 border-green-700/50 backdrop-blur-sm max-h-[250px] overflow-y-auto font-mono">
                             {TIME_SLOTS &&
-                              TIME_SLOTS.map((time) => (
-                                <SelectItem
-                                  key={time}
-                                  value={time}
-                                  disabled={isTimeDisabled(time)}
-                                  className={`text-green-100 focus:bg-green-800/40 focus:text-green-50 font-mono ${isTimeDisabled(time) ? "opacity-40 cursor-not-allowed" : ""}`}
-                                >
-                                  {time}
-                                </SelectItem>
-                              ))}
+                              TIME_SLOTS.map((time) => {
+                                const disabled = isTimeDisabled(time);
+                                return (
+                                  <SelectItem
+                                    key={time}
+                                    value={time}
+                                    disabled={disabled}
+                                    className={`font-mono ${
+                                      disabled
+                                        ? "opacity-40 cursor-not-allowed text-gray-500 focus:bg-transparent focus:text-gray-500"
+                                        : "text-green-100 focus:bg-green-800/40 focus:text-green-50"
+                                    }`}
+                                  >
+                                    <span
+                                      className={
+                                        disabled
+                                          ? "text-gray-500"
+                                          : "text-green-100"
+                                      }
+                                    >
+                                      {time}
+                                    </span>
+                                  </SelectItem>
+                                );
+                              })}
                           </SelectContent>
                         </Select>
                       </div>
