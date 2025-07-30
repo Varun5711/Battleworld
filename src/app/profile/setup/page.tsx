@@ -1,15 +1,31 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CandidateForm from "@/components/profile/CandidateForm";
 import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
+import Stepper, { Step } from '../../../components/shared/Stepper';
+
+// Define the form data interface
+interface FormData {
+  name: string;
+  role: string;
+  skills: string[];
+  experience: string;
+}
 
 export default function ProfileSetupPage() {
   const { user } = useUser();
   const router = useRouter();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    role: '',
+    skills: [] as string[], // Explicitly type as string array
+    experience: ''
+  });
 
   const currentUser = useQuery(api.users.getUserByClerkId, {
     clerkId: user?.id || "",
@@ -20,6 +36,17 @@ export default function ProfileSetupPage() {
       router.push("/jobs");
     }
   }, [currentUser, router]);
+
+  const handleStepChange = (step: number) => {
+    setCurrentStep(step);
+    console.log(`Moved to step: ${step}`);
+  };
+
+  const handleFinalStepCompleted = () => {
+    console.log("Profile setup completed!");
+    // Here you would typically save the profile data
+    router.push("/jobs");
+  };
 
   if (currentUser === undefined) {
     return (
@@ -74,7 +101,7 @@ export default function ProfileSetupPage() {
           </div>
         </div>
 
-        {/* Form */}
+        {/* Stepper Form */}
         <div className="relative animate-slide-up-form">
           <div className="absolute -inset-px bg-gradient-to-r from-red-500/20 via-transparent to-red-500/20 rounded-2xl blur-sm"></div>
 
@@ -82,7 +109,135 @@ export default function ProfileSetupPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
 
             <div className="relative p-8 lg:p-12">
-              <CandidateForm />
+              <Stepper
+                initialStep={1}
+                onStepChange={handleStepChange}
+                onFinalStepCompleted={handleFinalStepCompleted}
+                backButtonText="Previous"
+                nextButtonText="Next"
+              >
+                <Step>
+                  <div className="text-center space-y-6">
+                    <h2 className="text-2xl font-semibold text-white mb-4">
+                      Welcome to Your Transformation
+                    </h2>
+                    <div className="w-16 h-16 mx-auto bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">👑</span>
+                    </div>
+                    <p className="text-zinc-300 text-lg leading-relaxed max-w-md mx-auto">
+                      Begin your journey to ultimate power. We'll guide you through setting up your villainous profile.
+                    </p>
+                    <div className="text-sm text-zinc-500">
+                      Step {currentStep} of 4
+                    </div>
+                  </div>
+                </Step>
+
+                <Step>
+                  <div className="space-y-6">
+                    <h2 className="text-2xl font-semibold text-white mb-6 text-center">
+                      Reveal Your Identity
+                    </h2>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-zinc-300 text-sm font-medium mb-2">
+                          Villain Name
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.name}
+                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          placeholder="Dr. Doom, Lord Voldemort, etc..."
+                          className="w-full px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:border-red-500 focus:outline-none transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-zinc-300 text-sm font-medium mb-2">
+                          Preferred Role
+                        </label>
+                        <select
+                          value={formData.role}
+                          onChange={(e) => setFormData({...formData, role: e.target.value})}
+                          className="w-full px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-lg text-white focus:border-red-500 focus:outline-none transition-colors"
+                        >
+                          <option value="">Select your domain...</option>
+                          <option value="mastermind">Evil Mastermind</option>
+                          <option value="scientist">Mad Scientist</option>
+                          <option value="sorcerer">Dark Sorcerer</option>
+                          <option value="overlord">Galactic Overlord</option>
+                          <option value="assassin">Shadow Assassin</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </Step>
+
+                <Step>
+                  <div className="space-y-6">
+                    <h2 className="text-2xl font-semibold text-white mb-6 text-center">
+                      Powers & Abilities
+                    </h2>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-zinc-300 text-sm font-medium mb-3">
+                          Select Your Dark Arts
+                        </label>
+                        <div className="grid grid-cols-2 gap-3">
+                          {['Mind Control', 'Necromancy', 'Technology', 'Magic', 'Strategy', 'Combat'].map((skill) => (
+                            <label key={skill} className="flex items-center space-x-3 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={formData.skills.includes(skill)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setFormData({...formData, skills: [...formData.skills, skill]});
+                                  } else {
+                                    setFormData({...formData, skills: formData.skills.filter(s => s !== skill)});
+                                  }
+                                }}
+                                className="w-4 h-4 text-red-500 bg-zinc-800 border-zinc-600 rounded focus:ring-red-500"
+                              />
+                              <span className="text-zinc-300">{skill}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-zinc-300 text-sm font-medium mb-2">
+                          Years of Evil Experience
+                        </label>
+                        <input
+                          type="number"
+                          value={formData.experience}
+                          onChange={(e) => setFormData({...formData, experience: e.target.value})}
+                          placeholder="How long have you been plotting?"
+                          className="w-full px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:border-red-500 focus:outline-none transition-colors"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </Step>
+
+                <Step>
+                  <div className="text-center space-y-6">
+                    <h2 className="text-2xl font-semibold text-white mb-6">
+                      Your Villainous Profile
+                    </h2>
+                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center">
+                      <span className="text-3xl">⚡</span>
+                    </div>
+                    <div className="bg-zinc-800/30 rounded-lg p-6 text-left space-y-3">
+                      <div><span className="text-zinc-400">Name:</span> <span className="text-white">{formData.name || 'Not specified'}</span></div>
+                      <div><span className="text-zinc-400">Role:</span> <span className="text-white">{formData.role || 'Not specified'}</span></div>
+                      <div><span className="text-zinc-400">Skills:</span> <span className="text-white">{formData.skills.join(', ') || 'None selected'}</span></div>
+                      <div><span className="text-zinc-400">Experience:</span> <span className="text-white">{formData.experience || 'Not specified'} years</span></div>
+                    </div>
+                    <p className="text-zinc-300">
+                      Ready to unleash your potential upon the world?
+                    </p>
+                  </div>
+                </Step>
+              </Stepper>
             </div>
 
             <div className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-red-500/50 to-transparent w-0 group-hover:w-full transition-all duration-1000 ease-out"></div>
@@ -95,7 +250,7 @@ export default function ProfileSetupPage() {
         {/* Footer */}
         <div className="text-center mt-16 animate-fade-in-footer">
           <p className="text-zinc-500 text-sm font-medium tracking-wide">
-            Powered by Doom’s Code. Forged in Fire.
+            Powered by Doom's Code. Forged in Fire.
           </p>
         </div>
       </div>
@@ -135,4 +290,4 @@ export default function ProfileSetupPage() {
       `}</style>
     </div>
   );
-} 
+}
