@@ -24,9 +24,7 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    "/sign-in(.*)",
-    "/sso-callback(.*)",
-    "/((?!_next|.*\\.(?:js|css|svg|png|jpg|jpeg|webp|ttf|woff2?|ico|json|txt)).*)",
+    "/((?!_next|sign-in|unauthorized|sso-callback|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     "/(api|trpc)(.*)",
   ],
 };
