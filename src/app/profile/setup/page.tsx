@@ -23,7 +23,7 @@ export default function ProfileSetupPage() {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     role: '',
-    skills: [] as string[], // Explicitly type as string array
+    skills: [],
     experience: ''
   });
 
@@ -37,7 +37,26 @@ export default function ProfileSetupPage() {
     }
   }, [currentUser, router]);
 
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        return true; // Welcome step, always allow
+      case 2:
+        return formData.name.trim() !== '' && formData.role !== '';
+      case 3:
+        return formData.skills.length > 0 && formData.experience.trim() !== '';
+      case 4:
+        return true; // Final step
+      default:
+        return false;
+    }
+  };
+
   const handleStepChange = (step: number) => {
+    // Only allow step change if current step is valid or going backwards
+    if (step > currentStep && !validateStep(currentStep)) {
+      return; // Prevent moving forward if current step is invalid
+    }
     setCurrentStep(step);
     console.log(`Moved to step: ${step}`);
   };
@@ -46,6 +65,18 @@ export default function ProfileSetupPage() {
     console.log("Profile setup completed!");
     // Here you would typically save the profile data
     router.push("/jobs");
+  };
+
+  const updateFormData = (updates: Partial<FormData>) => {
+    setFormData(prev => ({ ...prev, ...updates }));
+  };
+
+  const toggleSkill = (skill: string, checked: boolean) => {
+    if (checked) {
+      updateFormData({ skills: [...formData.skills, skill] });
+    } else {
+      updateFormData({ skills: formData.skills.filter(s => s !== skill) });
+    }
   };
 
   if (currentUser === undefined) {
@@ -122,11 +153,16 @@ export default function ProfileSetupPage() {
                       Welcome to Your Transformation
                     </h2>
                     <div className="w-16 h-16 mx-auto bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">👑</span>
+                      <div className="w-8 h-8 bg-white/20 rounded-full"></div>
                     </div>
                     <p className="text-zinc-300 text-lg leading-relaxed max-w-md mx-auto">
                       Begin your journey to ultimate power. We'll guide you through setting up your villainous profile.
                     </p>
+                    {!validateStep(2) && currentStep > 1 && (
+                      <div className="text-red-400 text-sm mt-4">
+                        Please complete your identity details to proceed.
+                      </div>
+                    )}
                     <div className="text-sm text-zinc-500">
                       Step {currentStep} of 4
                     </div>
@@ -146,9 +182,11 @@ export default function ProfileSetupPage() {
                         <input
                           type="text"
                           value={formData.name}
-                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          onChange={(e) => updateFormData({ name: e.target.value })}
                           placeholder="Dr. Doom, Lord Voldemort, etc..."
-                          className="w-full px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:border-red-500 focus:outline-none transition-colors"
+                          className={`w-full px-4 py-3 bg-zinc-800/50 border rounded-lg text-white placeholder-zinc-500 focus:outline-none transition-colors ${
+                            formData.name.trim() === '' ? 'border-red-500/50 focus:border-red-500' : 'border-zinc-700 focus:border-red-500'
+                          }`}
                         />
                       </div>
                       <div>
@@ -157,8 +195,10 @@ export default function ProfileSetupPage() {
                         </label>
                         <select
                           value={formData.role}
-                          onChange={(e) => setFormData({...formData, role: e.target.value})}
-                          className="w-full px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-lg text-white focus:border-red-500 focus:outline-none transition-colors"
+                          onChange={(e) => updateFormData({ role: e.target.value })}
+                          className={`w-full px-4 py-3 bg-zinc-800/50 border rounded-lg text-white focus:outline-none transition-colors ${
+                            formData.role === '' ? 'border-red-500/50 focus:border-red-500' : 'border-zinc-700 focus:border-red-500'
+                          }`}
                         >
                           <option value="">Select your domain...</option>
                           <option value="mastermind">Evil Mastermind</option>
@@ -188,19 +228,18 @@ export default function ProfileSetupPage() {
                               <input
                                 type="checkbox"
                                 checked={formData.skills.includes(skill)}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setFormData({...formData, skills: [...formData.skills, skill]});
-                                  } else {
-                                    setFormData({...formData, skills: formData.skills.filter(s => s !== skill)});
-                                  }
-                                }}
+                                onChange={(e) => toggleSkill(skill, e.target.checked)}
                                 className="w-4 h-4 text-red-500 bg-zinc-800 border-zinc-600 rounded focus:ring-red-500"
                               />
                               <span className="text-zinc-300">{skill}</span>
                             </label>
                           ))}
                         </div>
+                        {formData.skills.length === 0 && (
+                          <div className="text-red-400 text-sm mt-2">
+                            Please select at least one skill
+                          </div>
+                        )}
                       </div>
                       <div>
                         <label className="block text-zinc-300 text-sm font-medium mb-2">
@@ -209,10 +248,17 @@ export default function ProfileSetupPage() {
                         <input
                           type="number"
                           value={formData.experience}
-                          onChange={(e) => setFormData({...formData, experience: e.target.value})}
+                          onChange={(e) => updateFormData({ experience: e.target.value })}
                           placeholder="How long have you been plotting?"
-                          className="w-full px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:border-red-500 focus:outline-none transition-colors"
+                          className={`w-full px-4 py-3 bg-zinc-800/50 border rounded-lg text-white placeholder-zinc-500 focus:outline-none transition-colors ${
+                            formData.experience.trim() === '' ? 'border-red-500/50 focus:border-red-500' : 'border-zinc-700 focus:border-red-500'
+                          }`}
                         />
+                        {formData.experience.trim() === '' && (
+                          <div className="text-red-400 text-sm mt-2">
+                            Please enter your years of experience
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -224,7 +270,7 @@ export default function ProfileSetupPage() {
                       Your Villainous Profile
                     </h2>
                     <div className="w-20 h-20 mx-auto bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center">
-                      <span className="text-3xl">⚡</span>
+                      <div className="w-10 h-10 bg-white/30 rounded-full"></div>
                     </div>
                     <div className="bg-zinc-800/30 rounded-lg p-6 text-left space-y-3">
                       <div><span className="text-zinc-400">Name:</span> <span className="text-white">{formData.name || 'Not specified'}</span></div>
