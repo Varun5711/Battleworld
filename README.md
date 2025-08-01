@@ -1,6 +1,6 @@
-# 🚀 BattleWorld - AI-Powered Interview Platform
+# 🚀 BattleWorld - Modern Interview Platform
 
-A cutting-edge interview platform that combines AI-powered assessments, real-time video conferencing, and comprehensive candidate management. Built with Next.js, Convex, and Stream for seamless hiring experiences.
+A cutting-edge interview platform that combines real-time video conferencing, comprehensive candidate management, and seamless hiring experiences. Built with Next.js, Convex, and Stream for modern recruitment workflows.
 
 ![BattleWorld](https://img.shields.io/badge/BattleWorld-DOOM-green)
 ![Next.js](https://img.shields.io/badge/Next.js-15.4.1-black)
@@ -10,7 +10,6 @@ A cutting-edge interview platform that combines AI-powered assessments, real-tim
 ## 🌟 Features
 
 ### 🎯 Core Functionality
-- **AI-Powered Interviews**: Conduct intelligent interviews with real-time assessment
 - **Video Conferencing**: High-quality video calls powered by Stream
 - **Real-time Chat**: Instant messaging between candidates and interviewers
 - **Job Management**: Post, manage, and track job applications
@@ -209,10 +208,10 @@ doom/
 
 ## 🎯 Key Features Explained
 
-### AI-Powered Interviews
-- Real-time assessment during video calls
+### Video Interviews
+- Real-time video conferencing with screen sharing
 - Code editor integration for technical evaluations
-- Automated scoring and feedback generation
+- Manual assessment and feedback system
 
 ### Real-time Collaboration
 - Live video conferencing with screen sharing
