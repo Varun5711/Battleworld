@@ -10,12 +10,10 @@ interface ResumeViewerProps {
 }
 
 function isValidStorageId(id: string | null | undefined): id is Id<"_storage"> {
-  // Convex storage IDs are typically 32+ chars, but you may want to check for a specific pattern
   return typeof id === "string" && id.length >= 16;
 }
 
 export default function ResumeViewer({ fileId }: ResumeViewerProps) {
-  console.log("ResumeViewer fileId:", fileId);
 
   if (!fileId) {
     return (

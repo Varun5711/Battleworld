@@ -1,7 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-// Create a new job application
 export const createApplication = mutation({
   args: {
     jobId: v.id("jobs"),
@@ -24,8 +23,6 @@ export const createApplication = mutation({
   },
 });
 
-// Get logged-in candidate's applications
-// convex/applications.ts
 export const getMyApplications = query({
   args: { candidateId: v.string() },
   handler: async (ctx, args) => {
@@ -44,7 +41,6 @@ export const getMyApplications = query({
   },
 });
 
-// Get applications by job (for Doom)
 export const getApplicationsByJob = query({
   args: {
     jobId: v.id("jobs"),
@@ -60,7 +56,6 @@ export const getApplicationsByJob = query({
   },
 });
 
-// Get single application (used for detail view)
 export const getApplicationById = query({
   args: {
     applicationId: v.id("applications"),
@@ -73,7 +68,6 @@ export const getApplicationById = query({
   },
 });
 
-// Update application status (Doom only)
 export const updateApplicationStatus = mutation({
   args: {
     applicationId: v.id("applications"),
@@ -93,7 +87,6 @@ export const updateApplicationStatus = mutation({
   },
 });
 
-// Delete an application
 export const deleteApplication = mutation({
   args: {
     applicationId: v.id("applications"),
@@ -106,7 +99,6 @@ export const deleteApplication = mutation({
   },
 });
 
-// convex/applications.ts
 export const getAllApplications = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -132,10 +124,8 @@ export const getShortlistedCandidates = query({
       (app) => jobIds.includes(app.jobId) && app.status === "shortlisted"
     );
 
-    // fetch all candidateIds (clerkIds)
     const candidateClerkIds = shortlistedApps.map((app) => app.candidateId);
 
-    // fetch all matching users
     const users = await ctx.db.query("users").collect();
     const usersMap = Object.fromEntries(
       users.map((user) => [user.clerkId, user.name])

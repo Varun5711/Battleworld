@@ -12,7 +12,6 @@ function RecordingsPage() {
   const [recordings, setRecordings] = useState<CallRecording[]>([]);
 
   useEffect(() => {
-    console.log("Fetched calls:", calls);
     fetchRecordings();
   }, [calls]);
 

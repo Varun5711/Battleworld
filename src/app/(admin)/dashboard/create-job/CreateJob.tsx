@@ -125,7 +125,6 @@ export default function CreateJob() {
               <Stepper
                 initialStep={1}
                 onStepChange={(step) => {
-                  console.log(`Moving to step ${step}`);
                 }}
                 onFinalStepCompleted={handleFinalSubmit}
                 backButtonText="Previous Domain"

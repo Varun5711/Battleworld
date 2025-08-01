@@ -17,8 +17,6 @@ export default function SyncClerkUser() {
         (localStorage.getItem("pendingRole") as "candidate" | "interviewer" | null)) ||
       "candidate";
 
-    console.log("Creating user with role:", storedRole); // ✅ debug check
-
     createUser({
       clerkId: user.id,
       name: user.fullName || "Unknown",

@@ -11,32 +11,18 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string>();
   const { user, isLoaded } = useUser();
 
-  useEffect(() => {
-    console.log("🔍 StreamVideoProvider useEffect triggered");
-    console.log("isLoaded:", isLoaded, "user:", user?.id);
-    
+  useEffect(() => {    
     if (!isLoaded) {
-      console.log("⏳ User not loaded yet");
       return;
     }
     
     if (!user) {
-      console.log("❌ No user found");
       return;
     }
 
-    console.log("🔄 Starting Stream client initialization...");
 
     const initializeClient = async () => {
-      try {
-        console.log("📡 Testing token provider first...");
-        
-        // Test the token provider separately
-        const testToken = await streamTokenProvider();
-        console.log("✅ Token test successful:", testToken ? "Got token" : "No token");
-
-        console.log("🏗️ Creating StreamVideoClient...");
-        
+      try {        
         const client = new StreamVideoClient({
           apiKey: process.env.NEXT_PUBLIC_STREAM_API_KEY!,
           user: {
@@ -47,17 +33,14 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
           tokenProvider: streamTokenProvider,
         });
 
-        console.log("✅ StreamVideoClient created, setting state...");
         setStreamVideoClient(client);
-        console.log("✅ Stream client state set successfully");
-        
+;
+  
       } catch (error) {
-        console.error("❌ Stream initialization error:", error);
         setError(error instanceof Error ? error.message : "Stream initialization failed");
       }
     };
 
-    // Add a timeout to prevent infinite hanging
     const timeoutId = setTimeout(() => {
       console.error("⏰ Stream initialization timed out after 10 seconds");
       setError("Stream initialization timed out");
@@ -74,11 +57,9 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
   }
 
   if (!streamVideoClient) {
-    console.log("⏳ Still waiting for Stream client...");
     return <LoaderUI />;
   }
 
-  console.log("🎉 Rendering StreamVideo component");
   return <StreamVideo client={streamVideoClient}>{children}</StreamVideo>;
 };
 

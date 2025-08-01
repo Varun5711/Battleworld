@@ -44,9 +44,7 @@ export async function sendEmailToCandidate({
     };
 
     const info = await transporter.sendMail(mailOptions);
-
-    console.log("Email sent to:", to);
-    console.log("Message ID:", info.messageId);
+    
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error("Error sending email:", error);

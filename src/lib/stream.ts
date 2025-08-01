@@ -23,7 +23,6 @@ export async function upsertStreamUser({
       role: "user", // ✅ Optional: gives server-side elevated permissions
     });
 
-    console.log(`✅ Stream user created: ${id}`);
   } catch (error: any) {
     console.error("❌ Failed to upsert Stream user:", error.response?.data || error.message || error);
     throw error;

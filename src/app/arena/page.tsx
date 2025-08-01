@@ -5,7 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
 import MeetingCard from "@/components/meeting/MeetingCard";
-import { useEffect, ReactNode, FC } from "react";
+import { ReactNode, FC } from "react";
 import { useUserRole } from "@/hooks/useUserRole";
 import { Calendar, Clock, Users, MapPin } from "lucide-react";
 
@@ -192,12 +192,6 @@ export default function CandidateInterviewUI() {
     candidateId ? { candidateId } : "skip"
   );
 
-  useEffect(() => {
-    console.log("USER ID:", candidateId);
-    console.log("INTERVIEWS:", interviews);
-    console.log("IS INTERVIEWER:", isInterviewer);
-  }, [candidateId, interviews, isInterviewer]);
-
   if (!candidateId || interviews === undefined || roleLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950 flex items-center justify-center">
@@ -354,7 +348,6 @@ export default function CandidateInterviewUI() {
           {/* Enhanced Grid Layout */}
           <div className="grid gap-10 lg:grid-cols-2 xl:grid-cols-2">
             {interviews?.map((interview: Interview, index: number) => {
-              console.log(interview.status);
               
               return (
                 <InterviewCard key={interview._id} interview={interview} index={index} isInterviewer={isInterviewer}>

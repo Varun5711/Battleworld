@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { useMutation, useQuery } from "convex/react";
@@ -173,11 +173,9 @@ function InterviewScheduleUI() {
   ) => {
     setProcessingInterviews((prev) => ({ ...prev, [interview._id]: result }));
 
-    // Find candidate information
     const candidate = users.find((u) => u.clerkId === interview.candidateId);
     if (!candidate) {
       toast.error("Candidate not found in system");
-      // Clear processing state on error
       setProcessingInterviews((prev) => ({ ...prev, [interview._id]: null }));
       return;
     }
@@ -195,64 +193,50 @@ function InterviewScheduleUI() {
           ? `Congratulations ${candidate.name} - You've Advanced to the Next Stage!`
           : `Thank You for Your Time - ${candidate.name}`;
 
-      const emailBody =
-        result === "pass"
-          ? `💀 SUBJECT: You’ve Been Summoned by Doom Industries 💀
-      
-      Dear ${candidate.name},
-      
-      🔥 HELL YES! 🔥
-      
-      You’ve SURVIVED the gauntlet and EMERGED VICTORIOUS in your interview with **DOOM INDUSTRIES**.
-      
-      Your resilience, technical firepower, and unshakable mindset have blown us away. You’ve proven yourself worthy to join our elite strike force of innovators, problem-solvers, and disruptors.
-      
-      🧨 THE WAR ROOM AWAITS:
-      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      ⚙️ Our HR Operatives will make contact within 24-48 hours  
-      ⚙️ Expect discussions on paygrade, gear (benefits), and deployment (start date)  
-      ⚙️ An OFFICIAL OFFER transmission is incoming  
-      ⚙️ Background checks will commence (no demons allowed)  
-      ⚙️ Welcome protocols and onboarding will be initiated
-      
-      📡 MISSION INTEL:
-      A Command Officer (HR Rep) will connect via secure line (phone/email) to brief you on:
-      • Compensation & perks package  
-      • Deployment schedule  
-      • Critical documents required  
-      • Squad introduction & initiation sequence  
-      
-      This is more than a job. This is **DOOM INDUSTRIES** — a domain of the fearless, the restless, the relentless.
-      
-      WELCOME TO THE LEGION. 🔥
-      
-      — The Doom Industries Recruitment Unit  
-      ⚔️ *Born for Chaos. Built for Excellence.*
-      
-      P.S. Keep your comms open. The call is coming. 👁️`
-          : `💀 SUBJECT: Doom Industries Interview Update 💀
-      
-      Dear ${candidate.name},
-      
-      Thank you for entering the arena with us at **DOOM INDUSTRIES**.
-      
-      Though you fought valiantly, after evaluating every contender with precision and intensity, we have chosen to advance with warriors whose experience aligns more closely with the tactical requirements of this specific role.
-      
-      ⚠️ PLEASE KNOW:
-      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      • Your potential is respected — this is not a reflection of your overall worth  
-      • We encourage re-entry in future operations that better match your profile  
-      • Your data remains in our vault for future missions  
-      • Your feedback performance was impressive in key areas
-      
-      We recognize and appreciate the time, energy, and passion you brought to the battlefield. Not everyone dares to step into the fire — but you did.
-      
-      May your journey ahead be filled with victories. And when the next call from Doom echoes… answer it.
-      
-      Until then...
-      
-      — The Doom Industries Recruitment Unit  
-      ☠️ *Only the Relentless Rise.*`;
+          const emailBody =
+          result === "pass"
+            ? `Dear ${candidate.name},
+        
+        Congratulations!
+        
+        You have successfully completed your interview with Doom Industries. Your technical skills, problem-solving abilities, and composed mindset have left a strong impression on our recruitment team.
+        
+        Next steps:
+        
+        - Our HR team will contact you within 24–48 hours
+        - We will discuss compensation, benefits, and your expected start date
+        - A formal offer letter will be shared shortly
+        - Background verification will be conducted
+        - Onboarding procedures will be initiated
+        
+        You will also be contacted by an HR representative who will walk you through:
+        
+        - Your compensation and benefits package
+        - Deployment timelines
+        - Required documentation
+        - Introduction to your team and onboarding details
+        
+        We are excited to have you join our team and look forward to working with you at Doom Industries.
+        
+        Best regards,  
+        The Doom Industries Recruitment Team`
+            : `Dear ${candidate.name},
+        
+        Thank you for taking the time to interview with Doom Industries.
+        
+        We appreciate the effort and enthusiasm you brought to the process. After careful consideration, we have decided to move forward with other candidates whose experience is more closely aligned with the requirements of the role.
+        
+        Please know that:
+        
+        - This decision is not a reflection of your overall capabilities
+        - We encourage you to apply again for future opportunities that better match your profile
+        - Your details will remain in our records for upcoming openings
+        - We were impressed with several aspects of your performance
+        
+        Thank you again for your interest in Doom Industries. We wish you success in your future endeavors.
+        
+        Best regards,  
+        The Doom Industries Recruitment Team`;
 
       const emailResponse = await fetch("/api/send-email", {
         method: "POST",
@@ -280,12 +264,6 @@ function InterviewScheduleUI() {
         );
       }
 
-      const emailResult = await emailResponse.json();
-
-      console.log(
-        "🔄 Updating interview status to:",
-        result === "pass" ? "passed" : "failed"
-      );
       await updateInterviewStatus({
         interviewId: interview._id,
         status: result === "pass" ? "passed" : "failed",
@@ -293,8 +271,8 @@ function InterviewScheduleUI() {
 
       const successMessage =
         result === "pass"
-          ? `🎉 INTERVIEW PASSED! Congratulations email sent to ${candidate.name} (${candidate.email})`
-          : `📧 INTERVIEW FAILED! Notification sent to ${candidate.name} (${candidate.email})`;
+          ? `INTERVIEW PASSED! Congratulations email sent to ${candidate.name} (${candidate.email})`
+          : `INTERVIEW FAILED! Notification sent to ${candidate.name} (${candidate.email})`;
 
       toast.success(successMessage, {
         duration: 5000,
@@ -306,16 +284,13 @@ function InterviewScheduleUI() {
         },
       });
 
-      console.log(
-        `✅ Successfully processed ${result.toUpperCase()} for interview ${interview._id}`
-      );
     } catch (error: any) {
       console.error(`❌ Failed to process interview ${result}:`, error);
 
       const errorMessage =
         result === "pass"
-          ? `⚠️ Failed to send PASS email to ${candidate?.name || "candidate"}. Error: ${error.message}`
-          : `⚠️ Failed to send FAIL email to ${candidate?.name || "candidate"}. Error: ${error.message}`;
+          ? `Failed to send PASS email to ${candidate?.name || "candidate"}. Error: ${error.message}`
+          : `Failed to send FAIL email to ${candidate?.name || "candidate"}. Error: ${error.message}`;
 
       toast.error(errorMessage, {
         duration: 6000,
