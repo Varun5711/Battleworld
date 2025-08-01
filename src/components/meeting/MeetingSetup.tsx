@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import PageWrapper from "@/components/shared/PageWrapper";
 
 function MeetingSetup({ onSetupComplete }: { onSetupComplete: () => void }) {
   const [isCameraDisabled, setIsCameraDisabled] = useState(true);
@@ -29,7 +28,6 @@ function MeetingSetup({ onSetupComplete }: { onSetupComplete: () => void }) {
   };
 
   return (
-    <PageWrapper>
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
         {/* Ambient background effects */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(16,185,129,0.1),transparent_50%)]" />
@@ -205,7 +203,6 @@ function MeetingSetup({ onSetupComplete }: { onSetupComplete: () => void }) {
           </div>
         </div>
       </div>
-    </PageWrapper>
   );
 }
 

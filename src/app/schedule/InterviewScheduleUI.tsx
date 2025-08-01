@@ -81,28 +81,6 @@ function InterviewScheduleUI() {
     interviewerIds: user?.id ? [user.id] : [],
   });
 
-  // Debug state changes
-  useEffect(() => {
-    console.log(
-      "🔍 Processing interviews state changed:",
-      processingInterviews
-    );
-  }, [processingInterviews]);
-
-  // Test email API on component mount
-  useEffect(() => {
-    const testEmailAPI = async () => {
-      try {
-        const response = await fetch("/api/send-email", {
-          method: "OPTIONS",
-        });
-        console.log("📧 Email API endpoint status:", response.status);
-      } catch (error) {
-        console.error("❌ Email API endpoint not reachable:", error);
-      }
-    };
-    testEmailAPI();
-  }, []);
 
   const isTodaySelected =
     formData.date.toDateString() === new Date().toDateString();
@@ -193,13 +171,6 @@ function InterviewScheduleUI() {
     interview: any,
     result: "pass" | "fail"
   ) => {
-    // Set processing state immediately with proper interview ID
-    console.log(
-      "🔄 Setting processing state for interview:",
-      interview._id,
-      "Result:",
-      result
-    );
     setProcessingInterviews((prev) => ({ ...prev, [interview._id]: result }));
 
     // Find candidate information
@@ -212,7 +183,6 @@ function InterviewScheduleUI() {
     }
 
     try {
-      // Show immediate feedback
       toast.loading(
         result === "pass"
           ? `Processing PASS for ${candidate.name} and sending email...`
@@ -220,7 +190,6 @@ function InterviewScheduleUI() {
         { duration: 3000 }
       );
 
-      // Prepare comprehensive email content
       const emailSubject =
         result === "pass"
           ? `Congratulations ${candidate.name} - You've Advanced to the Next Stage!`
@@ -285,14 +254,6 @@ function InterviewScheduleUI() {
       — The Doom Industries Recruitment Unit  
       ☠️ *Only the Relentless Rise.*`;
 
-      console.log("🚀 Sending email to:", candidate.email);
-      console.log("📧 Email subject:", emailSubject);
-      console.log(
-        "📝 Email body preview:",
-        emailBody.substring(0, 200) + "..."
-      );
-
-      // Send email with enhanced payload
       const emailResponse = await fetch("/api/send-email", {
         method: "POST",
         headers: {
@@ -311,8 +272,6 @@ function InterviewScheduleUI() {
         }),
       });
 
-      console.log("📬 Email response status:", emailResponse.status);
-
       if (!emailResponse.ok) {
         const errorText = await emailResponse.text();
         console.error("❌ Email API Error:", errorText);
@@ -322,9 +281,7 @@ function InterviewScheduleUI() {
       }
 
       const emailResult = await emailResponse.json();
-      console.log("✅ Email sent successfully:", emailResult);
 
-      // Update interview status in database
       console.log(
         "🔄 Updating interview status to:",
         result === "pass" ? "passed" : "failed"
@@ -334,11 +291,10 @@ function InterviewScheduleUI() {
         status: result === "pass" ? "passed" : "failed",
       });
 
-      // Show comprehensive success message
       const successMessage =
         result === "pass"
-          ? `🎉 INTERVIEW PASSED! ✅ Congratulations email sent to ${candidate.name} (${candidate.email})`
-          : `📧 INTERVIEW FAILED! ❌ Professional notification sent to ${candidate.name} (${candidate.email})`;
+          ? `🎉 INTERVIEW PASSED! Congratulations email sent to ${candidate.name} (${candidate.email})`
+          : `📧 INTERVIEW FAILED! Notification sent to ${candidate.name} (${candidate.email})`;
 
       toast.success(successMessage, {
         duration: 5000,
@@ -370,8 +326,6 @@ function InterviewScheduleUI() {
         },
       });
     } finally {
-      // Always clear processing state
-      console.log("🧹 Clearing processing state for interview:", interview._id);
       setProcessingInterviews((prev) => ({ ...prev, [interview._id]: null }));
     }
   };

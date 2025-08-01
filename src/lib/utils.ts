@@ -84,7 +84,7 @@ export const getMeetingStatus = (interview: Interview) => {
   if (
     interview.status === "completed" ||
     interview.status === "failed" ||
-    interview.status === "succeeded"
+    interview.status === "passed"
   )
     return "completed";
   if (isWithinInterval(now, { start: interviewStartTime, end: endTime })) return "live";

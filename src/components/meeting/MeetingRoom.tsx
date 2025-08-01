@@ -19,7 +19,6 @@ import {
   import { Button } from "@/components/ui/button";
   import EndCallButton from "./EndCallButton";
   import CodeEditor from "./CodeEditor";
-  import PageWrapper from "@/components/shared/PageWrapper";
   
   function MeetingRoom() {
     const router = useRouter();
@@ -38,7 +37,6 @@ import {
     }
   
     return (
-      <PageWrapper>
         <div className="h-[calc(100vh-4rem-1px)]">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel defaultSize={35} minSize={25} maxSize={100} className="relative">
@@ -101,7 +99,6 @@ import {
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
-      </PageWrapper>
     );
   }
   export default MeetingRoom;
