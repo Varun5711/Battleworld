@@ -32,7 +32,7 @@ pipeline {
                     sh '''
                         cd /home/agentjenkins/jenkins/workspace/BattleworldPipeline
                         echo "Setting up .env.local file with provided credentials..."
-                        
+
                         [ -f .env ] && rm .env
                         [ -f .env.example ] && rm .env.example
                         [ -f .env.local ] && rm .env.local
