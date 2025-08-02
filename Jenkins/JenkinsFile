@@ -1,0 +1,127 @@
+pipeline {
+    agent { label 'agentdoom' }
+    
+    stages {
+        stage("Code Cloning") {
+            steps {
+                git url: "https://github.com/Varun5711/Battleworld/", branch: "main"
+            }
+        }
+        
+        stage("Setup .env.local") {
+            steps {
+                withCredentials([
+                    string(credentialsId: 'convex_deployment', variable: 'CONVEX_DEPLOYMENT'),
+                    string(credentialsId: 'convex_deploy_key', variable: 'CONVEX_DEPLOY_KEY'),
+                    string(credentialsId: 'next_public_clerk_key', variable: 'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY'),
+                    string(credentialsId: 'clerk_secret_key', variable: 'CLERK_SECRET_KEY'),
+                    string(credentialsId: 'next_convex_key', variable: 'NEXT_PUBLIC_CONVEX_URL'),
+                    string(credentialsId: 'next_stream_key', variable: 'NEXT_PUBLIC_STREAM_API_KEY'),
+                    string(credentialsId: 'stream_api_secret', variable: 'STREAM_API_SECRET'),
+                    string(credentialsId: 'doom_password', variable: 'NEXT_PUBLIC_DOOM_PASSWORD'),
+                    string(credentialsId: 'email_pass', variable: 'EMAIL_PASS'),
+                    string(credentialsId: 'email_user', variable: 'EMAIL_USER'),
+                    string(credentialsId: 'smtp_host', variable: 'SMTP_SERVER_HOST'),
+                    string(credentialsId: 'smtp_username', variable: 'SMTP_SERVER_USERNAME'),
+                    string(credentialsId: 'smtp_password', variable: 'SMTP_SERVER_PASSWORD'),
+                    string(credentialsId: 'site_mail_sender', variable: 'SITE_MAIL_SENDER'),
+                    string(credentialsId: 'site_url', variable: 'NEXT_PUBLIC_SITE_URL'),
+                    string(credentialsId: 'upstash_redis_url', variable: 'UPSTASH_REDIS_REST_URL'),
+                    string(credentialsId: 'upstash_redis_token', variable: 'UPSTASH_REDIS_REST_TOKEN')
+                ]) {
+                    sh '''
+                        cd /home/agentjenkins/jenkins/workspace/BattleworldPipeline
+                        echo "Setting up .env.local file with provided credentials..."
+                        
+                        [ -f .env ] && rm .env
+                        [ -f .env.example ] && rm .env.example
+                        [ -f .env.local ] && rm .env.local
+                        
+                        cat <<EOF > .env.local
+CONVEX_DEPLOYMENT=${CONVEX_DEPLOYMENT}
+CONVEX_DEPLOY_KEY=${CONVEX_DEPLOY_KEY}
+NEXT_PUBLIC_CONVEX_URL=${NEXT_PUBLIC_CONVEX_URL}
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+NEXT_PUBLIC_STREAM_API_KEY=${NEXT_PUBLIC_STREAM_API_KEY}
+STREAM_API_SECRET=${STREAM_API_SECRET}
+NEXT_PUBLIC_DOOM_PASSWORD=${NEXT_PUBLIC_DOOM_PASSWORD}
+EMAIL_PASS=${EMAIL_PASS}
+EMAIL_USER=${EMAIL_USER}
+SMTP_SERVER_HOST=${SMTP_SERVER_HOST}
+SMTP_SERVER_USERNAME=${SMTP_SERVER_USERNAME}
+SMTP_SERVER_PASSWORD=${SMTP_SERVER_PASSWORD}
+SITE_MAIL_SENDER=${SITE_MAIL_SENDER}
+NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+UPSTASH_REDIS_REST_URL=${UPSTASH_REDIS_REST_URL}
+UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN}
+EOF
+                        
+                        echo ".env.local file created successfully"
+                        echo "Verifying required variables are set:"
+                        grep -E "(NEXT_PUBLIC_CONVEX_URL|CONVEX_DEPLOYMENT)" .env.local || echo "Missing critical Convex variables"
+                    '''
+                }
+            }
+        }
+        
+        stage("Build") {
+            steps {
+                sh '''
+                    echo "🔨 Building Docker image with build args..."
+                    docker build \
+                        --build-arg NEXT_PUBLIC_CONVEX_URL="${NEXT_PUBLIC_CONVEX_URL}" \
+                        --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}" \
+                        --build-arg NEXT_PUBLIC_STREAM_API_KEY="${NEXT_PUBLIC_STREAM_API_KEY}" \
+                        --build-arg NEXT_PUBLIC_DOOM_PASSWORD="${NEXT_PUBLIC_DOOM_PASSWORD}" \
+                        --build-arg NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL}" \
+                        -t battleworld:latest .
+                '''
+            }
+        }
+        
+        stage("Push To Docker Hub") {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-hub-credentials',
+                    usernameVariable: 'DOCKER_USERNAME',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
+                    sh '''
+                        echo "Pushing to Docker Hub..."
+                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                        docker tag battleworld:latest $DOCKER_USERNAME/battleworld:latest
+                        docker push $DOCKER_USERNAME/battleworld:latest
+                        echo "Successfully pushed to Docker Hub"
+                    '''
+                }
+            }
+        }
+        
+        stage("Deploy") {
+            steps {
+                sh '''
+                    echo "Deploying application..."
+                    docker compose down || true
+                    docker compose up -d
+                    echo "Application deployed successfully"
+                '''
+            }
+        }
+    }
+    
+    post {
+        always {
+            sh '''
+                docker system prune -f || true
+                rm -f .env.local
+            '''
+        }
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed. Check logs for details."
+        }
+    }
+}
