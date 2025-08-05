@@ -185,7 +185,7 @@ export default function HomePage() {
             {!dbUser?.role || dbUser.role === "candidate" ? (
               <>
                 <button
-                  onClick={() => router.push("/signup")}
+                  onClick={() => router.push("/profile/setup")}
                   className="group px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all duration-300 font-mono text-sm tracking-wider uppercase"
                 >
                   <span className="group-hover:text-white transition-colors">
