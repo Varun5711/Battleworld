@@ -16,7 +16,7 @@ import {
   Circle,
 } from "lucide-react";
 
-export default function ApplicationsPage() {
+export default function ApplicationsPage(): React.ReactElement {
   const { user, isLoaded } = useUser();
   const router = useRouter();
 
@@ -41,7 +41,7 @@ export default function ApplicationsPage() {
     interviewerIds.length > 0 ? { clerkIds: interviewerIds } : "skip"
   );
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string): React.ReactElement => {
     switch (status) {
       case "pending":
         return <Clock className="w-4 h-4" />;
@@ -54,7 +54,7 @@ export default function ApplicationsPage() {
     }
   };
 
-  const getStatusStyling = (status: string) => {
+  const getStatusStyling = (status: string): { badge: string; card: string } => {
     switch (status) {
       case "pending":
         return {
@@ -79,18 +79,19 @@ export default function ApplicationsPage() {
     }
   };
 
-  const getJobTitle = (jobId: string) => {
+  const getJobTitle = (jobId: string): string => {
     const job = jobDetails?.find((j) => j?._id === jobId);
     return job?.title ?? "Unknown Position";
   };
 
-  const getInterviewerName = (interviewerId: string) => {
+  const getInterviewerName = (interviewerId: string): string => {
     const interviewer = interviewerDetails?.find(
       (u) => u?.clerkId === interviewerId
     );
     return interviewer?.name ?? "Unknown Interviewer";
   };
 
+  // Sign in required state
   if (!isLoaded || !user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-black flex items-center justify-center font-mono">
@@ -109,58 +110,77 @@ export default function ApplicationsPage() {
     );
   }
 
-  // First check for loading state (only if data hasn't been fetched yet)
-if (apps === undefined || jobDetails === undefined) {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-black flex items-center justify-center font-mono">
-      <div className="flex items-center space-x-3">
-        <Loader2 className="animate-spin w-6 h-6 text-blue-300" />
-        <span className="text-lg font-black font-mono text-blue-300 tracking-wide">
-          Loading Applications...
-        </span>
+  // Loading state - only if data hasn't been fetched yet
+  if (apps === undefined || jobDetails === undefined) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-black flex items-center justify-center font-mono">
+        <div className="flex items-center space-x-3">
+          <Loader2 className="animate-spin w-6 h-6 text-blue-300" />
+          <span className="text-lg font-black font-mono text-blue-300 tracking-wide">
+            Loading Applications...
+          </span>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-// Then check for empty state (only after data is loaded)
-{apps && apps.length === 0 && (
-  <div className="flex flex-col items-center justify-center py-16 px-8">
-    
-    {/* Icon */}
-    <div className="mb-6">
-      <div className="bg-slate-800/50 p-6 rounded-full border border-slate-700/50">
-        <svg className="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
+  // Empty state - only after data is loaded and apps array is empty
+  if (apps.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-black text-white font-mono">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          {/* Header */}
+          <div className="mb-12">
+            <h1 className="text-5xl font-black font-mono text-transparent bg-gradient-to-r from-blue-400 to-white bg-clip-text mb-2 tracking-wider">
+              MY APPLICATIONS
+            </h1>
+            <p className="text-xl text-blue-300 font-mono font-medium tracking-wide">
+              TRACK THE STATUS OF YOUR JOB APPLICATIONS
+            </p>
+          </div>
+
+          {/* Empty State Content */}
+          <div className="flex flex-col items-center justify-center py-16 px-8">
+            
+            {/* Icon */}
+            <div className="mb-6">
+              <div className="bg-slate-800/50 p-6 rounded-full border border-slate-700/50">
+                <svg className="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Main Message */}
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-black text-transparent bg-gradient-to-r from-blue-400 via-blue-300 to-blue-600 bg-clip-text font-mono mb-3 uppercase">
+                No Applications Yet
+              </h3>
+              <p className="text-lg text-blue-200/70 font-mono max-w-md">
+                You haven't submitted any job applications. Start exploring opportunities to begin your journey.
+              </p>
+            </div>
+
+            {/* Action Button */}
+            <div>
+              <button 
+                onClick={() => router.push('/jobs')}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-8 py-4 rounded-xl font-black font-mono flex items-center gap-3 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25 uppercase tracking-wide"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Browse Jobs
+              </button>
+            </div>
+
+          </div>
+        </div>
       </div>
-    </div>
+    );
+  }
 
-    {/* Main Message */}
-    <div className="text-center mb-8">
-      <h3 className="text-2xl font-black text-transparent bg-gradient-to-r from-blue-400 via-blue-300 to-blue-600 bg-clip-text font-mono mb-3 uppercase">
-        No Applications Yet
-      </h3>
-      <p className="text-lg text-blue-200/70 font-mono max-w-md">
-        You haven't submitted any job applications. Start exploring opportunities to begin your journey.
-      </p>
-    </div>
-
-    {/* Action Button */}
-    <div>
-      <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-8 py-4 rounded-xl font-black font-mono flex items-center gap-3 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25 uppercase tracking-wide">
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-        </svg>
-        Browse Jobs
-      </button>
-    </div>
-
-  </div>
-)}
-
-// Rest of your component with applications data...
-
+  // Main component with applications data
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-black text-white font-mono">
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -175,120 +195,106 @@ if (apps === undefined || jobDetails === undefined) {
         </div>
 
         {/* Applications Grid */}
-        {apps.length === 0 ? (
-          <div className="text-center py-24">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-800 to-slate-800 rounded-full flex items-center justify-center border border-blue-700">
-              <Circle className="w-10 h-10 text-blue-400" />
-            </div>
-            <h2 className="text-3xl font-black font-mono text-transparent bg-gradient-to-r from-blue-400 to-white bg-clip-text mb-3 tracking-wide">
-              NO APPLICATIONS YET
-            </h2>
-            <p className="text-blue-300 text-lg max-w-md mx-auto leading-relaxed font-mono">
-              When you apply to jobs, they'll appear here so you can track their progress.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {apps.map((app, index) => {
-              const styling = getStatusStyling(app.status);
-              return (
-                <Card
-                  key={app._id}
-                  className={`bg-gradient-to-br from-slate-900/40 to-black/60 border-2 ${styling.card} hover:shadow-xl transition-all duration-200 hover:-translate-y-1 backdrop-blur-sm`}
-                >
-                  <CardContent className="p-6 space-y-6">
-                    {/* Job Title */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          {apps.map((app: any, index: number) => {
+            const styling = getStatusStyling(app.status);
+            return (
+              <Card
+                key={app._id}
+                className={`bg-gradient-to-br from-slate-900/40 to-black/60 border-2 ${styling.card} hover:shadow-xl transition-all duration-200 hover:-translate-y-1 backdrop-blur-sm`}
+              >
+                <CardContent className="p-6 space-y-6">
+                  {/* Job Title */}
+                  <div>
+                    <h2 className="text-xl font-black font-mono text-transparent bg-gradient-to-r from-blue-300 to-white bg-clip-text leading-tight mb-1 tracking-wide">
+                      {getJobTitle(app.jobId).toUpperCase()}
+                    </h2>
+                  </div>
+
+                  {/* Submission Date */}
+                  <div className="flex items-center gap-3 text-blue-200 bg-blue-900/30 rounded-lg p-3 border border-blue-800/30">
+                    <Clock className="w-4 h-4 text-blue-400" />
                     <div>
-                      <h2 className="text-xl font-black font-mono text-transparent bg-gradient-to-r from-blue-300 to-white bg-clip-text leading-tight mb-1 tracking-wide">
-                        {getJobTitle(app.jobId).toUpperCase()}
-                      </h2>
-                    </div>
-
-                    {/* Submission Date */}
-                    <div className="flex items-center gap-3 text-blue-200 bg-blue-900/30 rounded-lg p-3 border border-blue-800/30">
-                      <Clock className="w-4 h-4 text-blue-400" />
-                      <div>
-                        <p className="text-sm font-black font-mono text-blue-400 uppercase tracking-widest">
-                          APPLIED
-                        </p>
-                        <p className="text-base font-mono font-semibold text-white">
-                          {new Date(app._creationTime).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Status Badge */}
-                    <div className="flex justify-center">
-                      <Badge
-                        className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-black font-mono border ${styling.badge} tracking-wide`}
-                      >
-                        {getStatusIcon(app.status)}
-                        {(app.status === "shortlisted"
-                          ? "SHORTLISTED"
-                          : app.status === "rejected"
-                            ? "NOT SELECTED"
-                            : "UNDER REVIEW")}
-                      </Badge>
-                    </div>
-
-                    {/* Interviewer Info & Chat Button */}
-                    {app.status === "shortlisted" && app.interviewerId && (
-                      <div className="pt-4 border-t border-blue-800/50 space-y-4">
-                        <div className="text-center">
-                          <p className="text-sm font-black font-mono text-blue-400 mb-1 uppercase tracking-widest">
-                            INTERVIEWER
-                          </p>
-                          <p className="text-lg font-black font-mono text-transparent bg-gradient-to-r from-blue-300 to-white bg-clip-text tracking-wide">
-                            {getInterviewerName(app.interviewerId).toUpperCase()}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() =>
-                            router.push(`/chat/${app.interviewerId}`)
+                      <p className="text-sm font-black font-mono text-blue-400 uppercase tracking-widest">
+                        APPLIED
+                      </p>
+                      <p className="text-base font-mono font-semibold text-white">
+                        {new Date(app._creationTime).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
                           }
-                          className="w-full bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-lg font-black font-mono transition-colors duration-200 flex items-center justify-center gap-2 active:scale-98 border border-blue-600/50 tracking-wide"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                          START INTERVIEW CHAT
-                        </button>
-                      </div>
-                    )}
+                        )}
+                      </p>
+                    </div>
+                  </div>
 
-                    {/* Status Messages */}
-                    {app.status === "pending" && (
-                      <div className="pt-4 border-t border-blue-800/50 text-center">
-                        <p className="text-amber-300 font-black font-mono tracking-wide">
-                          APPLICATION UNDER REVIEW
-                        </p>
-                        <p className="text-blue-400 text-sm mt-1 font-mono">
-                          We'll notify you of any updates
-                        </p>
-                      </div>
-                    )}
+                  {/* Status Badge */}
+                  <div className="flex justify-center">
+                    <Badge
+                      className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-black font-mono border ${styling.badge} tracking-wide`}
+                    >
+                      {getStatusIcon(app.status)}
+                      {(app.status === "shortlisted"
+                        ? "SHORTLISTED"
+                        : app.status === "rejected"
+                          ? "NOT SELECTED"
+                          : "UNDER REVIEW")}
+                    </Badge>
+                  </div>
 
-                    {app.status === "rejected" && (
-                      <div className="pt-4 border-t border-blue-800/50 text-center">
-                        <p className="text-red-300 font-black font-mono tracking-wide">
-                          APPLICATION NOT SELECTED
+                  {/* Interviewer Info & Chat Button */}
+                  {app.status === "shortlisted" && app.interviewerId && (
+                    <div className="pt-4 border-t border-blue-800/50 space-y-4">
+                      <div className="text-center">
+                        <p className="text-sm font-black font-mono text-blue-400 mb-1 uppercase tracking-widest">
+                          INTERVIEWER
                         </p>
-                        <p className="text-blue-400 text-sm mt-1 font-mono">
-                          Thank you for your interest
+                        <p className="text-lg font-black font-mono text-transparent bg-gradient-to-r from-blue-300 to-white bg-clip-text tracking-wide">
+                          {getInterviewerName(app.interviewerId).toUpperCase()}
                         </p>
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        )}
+                      <button
+                        onClick={() =>
+                          router.push(`/chat/${app.interviewerId}`)
+                        }
+                        className="w-full bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-lg font-black font-mono transition-colors duration-200 flex items-center justify-center gap-2 active:scale-98 border border-blue-600/50 tracking-wide"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        START INTERVIEW CHAT
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Status Messages */}
+                  {app.status === "pending" && (
+                    <div className="pt-4 border-t border-blue-800/50 text-center">
+                      <p className="text-amber-300 font-black font-mono tracking-wide">
+                        APPLICATION UNDER REVIEW
+                      </p>
+                      <p className="text-blue-400 text-sm mt-1 font-mono">
+                        We'll notify you of any updates
+                      </p>
+                    </div>
+                  )}
+
+                  {app.status === "rejected" && (
+                    <div className="pt-4 border-t border-blue-800/50 text-center">
+                      <p className="text-red-300 font-black font-mono tracking-wide">
+                        APPLICATION NOT SELECTED
+                      </p>
+                      <p className="text-blue-400 text-sm mt-1 font-mono">
+                        Thank you for your interest
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
