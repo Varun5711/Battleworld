@@ -1,10 +1,28 @@
 pipeline {
     agent { label 'agentdoom' }
     
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+    }
+    
     stages {
         stage("Code Cloning") {
             steps {
                 git url: "https://github.com/Varun5711/Battleworld/", branch: "main"
+            }
+        }
+
+        stage("SonarQube Analysis") {
+            steps {
+                withSonarQubeEnv('SonarQubeServer') {
+                    sh '''
+                        $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectKey=Battleworld \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=$SONAR_HOST_URL \
+                        -Dsonar.login=$SONAR_AUTH_TOKEN
+                    '''
+                }
             }
         }
         
@@ -68,7 +86,6 @@ EOF
         stage("Build") {
             steps {
                 sh '''
-                    echo "🔨 Building Docker image with build args..."
                     docker build \
                         --build-arg NEXT_PUBLIC_CONVEX_URL="${NEXT_PUBLIC_CONVEX_URL}" \
                         --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}" \
@@ -76,6 +93,19 @@ EOF
                         --build-arg NEXT_PUBLIC_DOOM_PASSWORD="${NEXT_PUBLIC_DOOM_PASSWORD}" \
                         --build-arg NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL}" \
                         -t battleworld:latest .
+                '''
+            }
+        }
+
+        stage("Trivy Security Scan") {
+            steps {
+                sh '''
+                    docker run --rm \
+                        -v /var/run/docker.sock:/var/run/docker.sock \
+                        aquasec/trivy:latest image \
+                        --exit-code 1 \
+                        --severity HIGH,CRITICAL \
+                        battleworld:latest
                 '''
             }
         }
