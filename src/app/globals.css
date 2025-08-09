@@ -139,3 +139,32 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Doctor Doom themed scrollbar */
+::-webkit-scrollbar {
+  width: 5px; /* minimal width */
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a; /* deep black for shadowed background */
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0f5132, #198754); /* Doom's emerald cloak tones */
+  border-radius: 10px;
+  border: 1px solid #9ea1a3; /* metallic armor border */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #146c43, #20c997); /* brighter green when hovered */
+}
+
+::-webkit-scrollbar-corner {
+  background: #0a0a0a;
+}
+
+/* Optional smooth scroll */
+html {
+  scroll-behavior: smooth;
+}

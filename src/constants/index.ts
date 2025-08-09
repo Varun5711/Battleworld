@@ -119,9 +119,9 @@ export const CODING_QUESTIONS: CodeQuestion[] = [
 }`,
     },
     constraints: [
-      "2 ≤ nums.length ≤ 104",
-      "-109 ≤ nums[i] ≤ 109",
-      "-109 ≤ target ≤ 109",
+      "2 ≤ nums.length ≤ 10^4",
+      "-10^9 ≤ nums[i] ≤ 10^9",
+      "-10^9 ≤ target ≤ 10^9",
       "Only one valid answer exists.",
     ],
   },
@@ -190,6 +190,252 @@ export const CODING_QUESTIONS: CodeQuestion[] = [
 }`,
     },
   },
+  {
+    id: "fizz-buzz",
+    title: "Fizz Buzz",
+    description:
+      "Given an integer `n`, return a string array `answer` (1-indexed) where:\n\n- `answer[i] == \"FizzBuzz\"` if `i` is divisible by 3 and 5.\n- `answer[i] == \"Fizz\"` if `i` is divisible by 3.\n- `answer[i] == \"Buzz\"` if `i` is divisible by 5.\n- `answer[i] == i` (as a string) if none of the above conditions are true.",
+    examples: [
+      {
+        input: "n = 3",
+        output: '["1","2","Fizz"]',
+      },
+      {
+        input: "n = 5",
+        output: '["1","2","Fizz","4","Buzz"]',
+      },
+    ],
+    starterCode: {
+      javascript: `function fizzBuzz(n) {
+  // Write your solution here
+  
+}`,
+      python: `def fizz_buzz(n):
+    # Write your solution here
+    pass`,
+      java: `class Solution {
+    public List<String> fizzBuzz(int n) {
+        // Write your solution here
+        
+    }
+}`,
+    },
+  },
+  {
+    id: "valid-parentheses",
+    title: "Valid Parentheses",
+    description:
+      "Given a string `s` containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.\n\nAn input string is valid if:\n1. Open brackets are closed by the same type of brackets.\n2. Open brackets are closed in the correct order.\n3. Every close bracket has a corresponding open bracket of the same type.",
+    examples: [
+      {
+        input: 's = "()"',
+        output: "true",
+      },
+      {
+        input: 's = "()[]{}"',
+        output: "true",
+      },
+      {
+        input: 's = "(]"',
+        output: "false",
+      },
+    ],
+    starterCode: {
+      javascript: `function isValid(s) {
+  // Write your solution here
+  
+}`,
+      python: `def is_valid(s):
+    # Write your solution here
+    pass`,
+      java: `class Solution {
+    public boolean isValid(String s) {
+        // Write your solution here
+        
+    }
+}`,
+    },
+  },
+  {
+    id: "merge-two-sorted-lists",
+    title: "Merge Two Sorted Lists",
+    description:
+      "You are given the heads of two sorted linked lists `list1` and `list2`.\nMerge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.\nReturn the head of the merged linked list.",
+    examples: [
+      {
+        input: "list1 = [1,2,4], list2 = [1,3,4]",
+        output: "[1,1,2,3,4,4]",
+      },
+      {
+        input: "list1 = [], list2 = []",
+        output: "[]",
+      },
+    ],
+    starterCode: {
+      javascript: `function mergeTwoLists(list1, list2) {
+  // Write your solution here
+  
+}`,
+      python: `def merge_two_lists(list1, list2):
+    # Write your solution here
+    pass`,
+      java: `class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        // Write your solution here
+        
+    }
+}`,
+    },
+  },
+  {
+    id: "climbing-stairs",
+    title: "Climbing Stairs",
+    description:
+      "You are climbing a staircase. It takes `n` steps to reach the top.\nEach time you can climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
+    examples: [
+      {
+        input: "n = 2",
+        output: "2",
+        explanation: "1 step + 1 step, or 2 steps.",
+      },
+      {
+        input: "n = 3",
+        output: "3",
+      },
+    ],
+    starterCode: {
+      javascript: `function climbStairs(n) {
+  // Write your solution here
+  
+}`,
+      python: `def climb_stairs(n):
+    # Write your solution here
+    pass`,
+      java: `class Solution {
+    public int climbStairs(int n) {
+        // Write your solution here
+        
+    }
+}`,
+    },
+  },
+  {
+    id: "maximum-subarray",
+    title: "Maximum Subarray",
+    description:
+      "Given an integer array `nums`, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.",
+    examples: [
+      {
+        input: "nums = [-2,1,-3,4,-1,2,1,-5,4]",
+        output: "6",
+        explanation: "Subarray [4,-1,2,1] has the largest sum = 6.",
+      },
+    ],
+    starterCode: {
+      javascript: `function maxSubArray(nums) {
+  // Write your solution here
+  
+}`,
+      python: `def max_sub_array(nums):
+    # Write your solution here
+    pass`,
+      java: `class Solution {
+    public int maxSubArray(int[] nums) {
+        // Write your solution here
+        
+    }
+}`,
+    },
+  },
+  {
+    id: "valid-palindrome",
+    title: "Valid Palindrome",
+    description:
+      "Given a string `s`, return `true` if it is a palindrome, or `false` otherwise. Only consider alphanumeric characters and ignore cases.",
+    examples: [
+      {
+        input: 's = "A man, a plan, a canal: Panama"',
+        output: "true",
+      },
+      {
+        input: 's = "race a car"',
+        output: "false",
+      },
+    ],
+    starterCode: {
+      javascript: `function isPalindrome(s) {
+  // Write your solution here
+  
+}`,
+      python: `def is_palindrome(s):
+    # Write your solution here
+    pass`,
+      java: `class Solution {
+    public boolean isPalindrome(String s) {
+        // Write your solution here
+        
+    }
+}`,
+    },
+  },
+  {
+    id: "rotate-array",
+    title: "Rotate Array",
+    description:
+      "Given an array, rotate the array to the right by `k` steps, where `k` is non-negative.",
+    examples: [
+      {
+        input: "nums = [1,2,3,4,5,6,7], k = 3",
+        output: "[5,6,7,1,2,3,4]",
+      },
+    ],
+    starterCode: {
+      javascript: `function rotate(nums, k) {
+  // Write your solution here
+  
+}`,
+      python: `def rotate(nums, k):
+    # Write your solution here
+    pass`,
+      java: `class Solution {
+    public void rotate(int[] nums, int k) {
+        // Write your solution here
+        
+    }
+}`,
+    },
+  },
+  {
+    id: "longest-common-prefix",
+    title: "Longest Common Prefix",
+    description:
+      "Write a function to find the longest common prefix string amongst an array of strings. If there is no common prefix, return an empty string.",
+    examples: [
+      {
+        input: 'strs = ["flower","flow","flight"]',
+        output: '"fl"',
+      },
+      {
+        input: 'strs = ["dog","racecar","car"]',
+        output: '""',
+      },
+    ],
+    starterCode: {
+      javascript: `function longestCommonPrefix(strs) {
+  // Write your solution here
+  
+}`,
+      python: `def longest_common_prefix(strs):
+    # Write your solution here
+    pass`,
+      java: `class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        // Write your solution here
+        
+    }
+}`,
+    },
+  }
 ];
 
 export const LANGUAGES = [

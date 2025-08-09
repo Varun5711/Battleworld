@@ -55,21 +55,21 @@ const reviews: Review[] = [
 ];
 
 const ReviewCard = ({ review }: { review: Review }) => (
-  <div className="flex-shrink-0 w-80 mx-4 p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-300">
-    <div className="flex items-center gap-3 mb-4">
+  <div className="flex-shrink-0 w-72 sm:w-80 mx-2 sm:mx-4 p-4 sm:p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-300">
+    <div className="flex items-center gap-3 mb-3 sm:mb-4">
       <img
         src={review.img}
         alt={review.name}
-        className="w-10 h-10 rounded-full border border-white/20"
+        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/20"
       />
       <div>
-        <h3 className="font-mono text-sm font-semibold text-white">
+        <h3 className="font-mono text-xs sm:text-sm font-semibold text-white">
           {review.name}
         </h3>
         <p className="font-mono text-xs text-gray-400">{review.username}</p>
       </div>
     </div>
-    <p className="font-mono text-sm text-gray-300 leading-relaxed">
+    <p className="font-mono text-xs sm:text-sm text-gray-300 leading-relaxed">
       "{review.body}"
     </p>
   </div>
@@ -77,7 +77,7 @@ const ReviewCard = ({ review }: { review: Review }) => (
 
 const MarqueeReviews = () => {
   return (
-    <div className="relative overflow-hidden py-12">
+    <div className="relative overflow-hidden py-8 sm:py-12">
       <div className="flex animate-marquee">
         {/* First set of reviews */}
         {reviews.map((review, index) => (
@@ -90,8 +90,8 @@ const MarqueeReviews = () => {
       </div>
 
       {/* Fade gradients */}
-      <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-black to-transparent z-10" />
-      <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-black to-transparent z-10" />
+      <div className="absolute top-0 left-0 w-16 sm:w-32 h-full bg-gradient-to-r from-black to-transparent z-10" />
+      <div className="absolute top-0 right-0 w-16 sm:w-32 h-full bg-gradient-to-l from-black to-transparent z-10" />
     </div>
   );
 };
@@ -161,24 +161,25 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/40 z-10" />
 
         {/* Main Content */}
-        <div className="relative z-20 min-h-screen flex flex-col justify-center px-8 max-w-5xl mx-auto">
+        <div className="relative z-20 min-h-screen flex flex-col justify-center px-4 sm:px-8 max-w-5xl mx-auto">
           {/* Header */}
           <div
-            className={`text-center mb-16 transform transition-all duration-1000 ${
+            className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ${
               isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
             }`}
           >
-            <h1 className="text-8xl font-black font-mono tracking-tighter mb-6 bg-gradient-to-r from-green-400 via-gray-500 to-gray-300 bg-clip-text text-transparent">
+
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black font-mono tracking-tighter mb-4 sm:mb-6 bg-gradient-to-r from-green-400 via-gray-500 to-gray-300 bg-clip-text text-transparent leading-tight">
               BATTLEWORLD
             </h1>
-            <p className="text-xl font-mono text-gray-300 tracking-wide">
+            <p className="text-lg sm:text-xl font-mono text-gray-300 tracking-wide">
               Ultimate Arena
             </p>
           </div>
 
           {/* Action Buttons */}
           <div
-            className={`flex flex-col sm:flex-row gap-6 justify-center items-center mb-20 transform transition-all duration-1000 delay-300 ${
+            className={`flex flex-col gap-4 sm:gap-6 justify-center items-center mb-16 sm:mb-20 transform transition-all duration-1000 delay-300 ${
               isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
             }`}
           >
@@ -186,7 +187,7 @@ export default function HomePage() {
               <>
                 <button
                   onClick={() => router.push("/profile/setup")}
-                  className="group px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all duration-300 font-mono text-sm tracking-wider uppercase"
+                  className="group w-full max-w-xs sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all duration-300 font-mono text-xs sm:text-sm tracking-wider uppercase"
                 >
                   <span className="group-hover:text-white transition-colors">
                     Hero Registration
@@ -195,7 +196,7 @@ export default function HomePage() {
 
                 <button
                   onClick={() => setShowDoomModal(true)}
-                  className="group px-8 py-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/30 hover:from-blue-600/30 hover:to-purple-600/30 hover:border-blue-400/50 transition-all duration-300 font-mono text-sm tracking-wider uppercase"
+                  className="group w-full max-w-xs sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/30 hover:from-blue-600/30 hover:to-purple-600/30 hover:border-blue-400/50 transition-all duration-300 font-mono text-xs sm:text-sm tracking-wider uppercase"
                 >
                   <span className="group-hover:text-blue-100 transition-colors">
                     Doom's Tribunal
@@ -205,7 +206,7 @@ export default function HomePage() {
             ) : dbUser.role === "interviewer" ? (
               <button
                 onClick={() => router.push("/dashboard")}
-                className="px-8 py-4 bg-emerald-600/20 backdrop-blur-sm border border-emerald-500/30 hover:bg-emerald-600/30 hover:border-emerald-400/50 transition-all duration-300 font-mono text-sm tracking-wider uppercase"
+                className="w-full max-w-xs sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-emerald-600/20 backdrop-blur-sm border border-emerald-500/30 hover:bg-emerald-600/30 hover:border-emerald-400/50 transition-all duration-300 font-mono text-xs sm:text-sm tracking-wider uppercase"
               >
                 Enter Dashboard
               </button>
@@ -214,19 +215,19 @@ export default function HomePage() {
 
           {/* Quote */}
           <div
-            className={`text-center max-w-3xl mx-auto mb-20 transform transition-all duration-1000 delay-500 ${
+            className={`text-center max-w-3xl mx-auto mb-16 sm:mb-20 transform transition-all duration-1000 delay-500 ${
               isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
             }`}
           >
-            <blockquote className="text-2xl font-mono font-light text-gray-300 italic mb-4 leading-relaxed">
+            <blockquote className="text-lg sm:text-2xl font-mono font-light text-gray-300 italic mb-4 leading-relaxed px-4">
               "Heroes seek glory. Villains demand legacy."
             </blockquote>
-            <div className="w-16 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto" />
+            <div className="w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto" />
           </div>
 
           {/* Reviews Marquee */}
           <div
-            className={`mb-20 transform transition-all duration-1000 delay-600 ${
+            className={`mb-16 sm:mb-20 transform transition-all duration-1000 delay-600 ${
               isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
             }`}
           >
@@ -239,7 +240,7 @@ export default function HomePage() {
               isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
             }`}
           >
-            <div className="flex items-center gap-6 text-xs font-mono text-gray-500 uppercase tracking-widest">
+            <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-xs font-mono text-gray-500 uppercase tracking-widest">
               <div className="flex items-center gap-2">
                 <div className="w-1 h-1 bg-blue-400 rounded-full animate-pulse" />
                 <span>Clerk</span>
@@ -254,7 +255,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="text-xs font-mono text-gray-500 tracking-wide">
+            <div className="text-xs font-mono text-gray-500 tracking-wide text-center px-4">
               Made with passion by{" "}
               <a
                 href="https://github.com/Varun5711"

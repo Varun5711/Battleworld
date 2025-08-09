@@ -34,6 +34,7 @@ import {
   MailIcon,
   CheckCircleIcon,
   AlertCircleIcon,
+  MenuIcon,
 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { TIME_SLOTS } from "@/constants";
@@ -45,6 +46,7 @@ function InterviewScheduleUI() {
   const [open, setOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [processingInterviews, setProcessingInterviews] = useState<
     Record<string, "pass" | "fail" | null>
   >({});
@@ -80,7 +82,6 @@ function InterviewScheduleUI() {
     candidateId: "",
     interviewerIds: user?.id ? [user.id] : [],
   });
-
 
   const isTodaySelected =
     formData.date.toDateString() === new Date().toDateString();
@@ -193,50 +194,15 @@ function InterviewScheduleUI() {
           ? `Congratulations ${candidate.name} - You've Advanced to the Next Stage!`
           : `Thank You for Your Time - ${candidate.name}`;
 
-          const emailBody =
-          result === "pass"
-            ? `Dear ${candidate.name},
-        
-        Congratulations!
-        
-        You have successfully completed your interview with Doom Industries. Your technical skills, problem-solving abilities, and composed mindset have left a strong impression on our recruitment team.
-        
-        Next steps:
-        
-        - Our HR team will contact you within 24–48 hours
-        - We will discuss compensation, benefits, and your expected start date
-        - A formal offer letter will be shared shortly
-        - Background verification will be conducted
-        - Onboarding procedures will be initiated
-        
-        You will also be contacted by an HR representative who will walk you through:
-        
-        - Your compensation and benefits package
-        - Deployment timelines
-        - Required documentation
-        - Introduction to your team and onboarding details
-        
-        We are excited to have you join our team and look forward to working with you at Doom Industries.
-        
-        Best regards,  
-        The Doom Industries Recruitment Team`
-            : `Dear ${candidate.name},
-        
-        Thank you for taking the time to interview with Doom Industries.
-        
-        We appreciate the effort and enthusiasm you brought to the process. After careful consideration, we have decided to move forward with other candidates whose experience is more closely aligned with the requirements of the role.
-        
-        Please know that:
-        
-        - This decision is not a reflection of your overall capabilities
-        - We encourage you to apply again for future opportunities that better match your profile
-        - Your details will remain in our records for upcoming openings
-        - We were impressed with several aspects of your performance
-        
-        Thank you again for your interest in Doom Industries. We wish you success in your future endeavors.
-        
-        Best regards,  
-        The Doom Industries Recruitment Team`;
+          const emailBody = `
+              <!-- Body -->
+              <div style="padding: 20px; color: #d9ffec; background: #0f1f17;">
+                <p style="font-size: 16px; line-height: 1.6; color: #b3ffdb;">
+                  Dear ${candidate.name},<br><br>
+                  Congratulations! You have been selected our hr will contact you shortly
+                </p>
+              </div>
+        `;
 
       const emailResponse = await fetch("/api/send-email", {
         method: "POST",
@@ -283,7 +249,6 @@ function InterviewScheduleUI() {
           fontSize: "14px",
         },
       });
-
     } catch (error: any) {
       console.error(`❌ Failed to process interview ${result}:`, error);
 
@@ -371,47 +336,47 @@ function InterviewScheduleUI() {
         className="group animate-fade-in-up"
         style={{ animationDelay: `${index * 100}ms` }}
       >
-        <div className="relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-xl border border-green-600/30 rounded-lg p-8 h-full min-h-[380px] hover:border-green-500/50 hover:shadow-2xl hover:shadow-green-900/30 transition-all duration-500 hover:scale-[1.02] group overflow-hidden">
+        <div className="relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-xl border border-green-600/30 rounded-lg p-4 sm:p-6 lg:p-8 h-full min-h-[320px] sm:min-h-[360px] lg:min-h-[380px] hover:border-green-500/50 hover:shadow-2xl hover:shadow-green-900/30 transition-all duration-500 hover:scale-[1.02] group overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-green-800/10 via-transparent to-green-700/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg"></div>
 
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500/0 via-green-400/60 to-green-500/0 rounded-t-lg group-hover:via-green-300/80 transition-all duration-500"></div>
 
           <div className="relative z-10 h-full flex flex-col">
             {candidate && (
-              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-green-700/30">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-green-700/30">
                 <img
                   src={candidate.image || "/default-avatar.png"}
                   alt={candidate.name}
-                  className="w-12 h-12 rounded-full border-2 border-green-500/50"
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-green-500/50"
                 />
-                <div>
-                  <h4 className="text-green-300 font-black font-mono text-lg tracking-wide uppercase">
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-green-300 font-black font-mono text-sm sm:text-base lg:text-lg tracking-wide uppercase truncate">
                     {candidate.name}
                   </h4>
-                  <p className="text-green-400/70 font-mono text-sm">
+                  <p className="text-green-400/70 font-mono text-xs sm:text-sm truncate">
                     {candidate.email}
                   </p>
                 </div>
               </div>
             )}
 
-            <div className="flex-1 mb-6">
+            <div className="flex-1 mb-4 sm:mb-6">
               <MeetingCard interview={interview} />
             </div>
 
             <div
-              className={`pt-6 border-t border-green-700/30 ${(interview.status && interview.status.toLowerCase() === "completed") || !showActions ? "" : "space-y-4"}`}
+              className={`pt-4 sm:pt-6 border-t border-green-700/30 ${(interview.status && interview.status.toLowerCase() === "completed") || !showActions ? "" : "space-y-3 sm:space-y-4"}`}
             >
               {showActions &&
                 interview.status &&
                 interview.status.toLowerCase() === "completed" && (
-                  <div className="flex gap-4 justify-center mb-4">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-3 sm:mb-4">
                     {/* PASS BUTTON */}
                     <button
                       onClick={() => handleInterviewResult(interview, "pass")}
                       disabled={isAnyProcessing}
                       className={`
-                      group/btn relative overflow-hidden flex items-center gap-3 px-8 py-4 rounded-lg font-mono transition-all duration-300 font-black tracking-widest transform hover:scale-110 active:scale-95 shadow-2xl
+                      group/btn relative overflow-hidden flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 rounded-lg font-mono transition-all duration-300 font-black tracking-wider sm:tracking-widest transform hover:scale-105 sm:hover:scale-110 active:scale-95 shadow-2xl text-xs sm:text-sm
                       ${
                         isProcessingPass
                           ? "bg-gradient-to-r from-green-500 to-green-600 border-2 border-green-300 text-white cursor-wait scale-105 shadow-green-500/60 processing-animation"
@@ -426,17 +391,20 @@ function InterviewScheduleUI() {
 
                       {isProcessingPass ? (
                         <>
-                          <Loader2Icon className="w-5 h-5 animate-spin" />
-                          <span className="relative z-10">
+                          <Loader2Icon className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                          <span className="relative z-10 hidden sm:inline">
                             SENDING EMAIL...
                           </span>
-                          <MailIcon className="w-4 h-4 animate-bounce" />
+                          <span className="relative z-10 sm:hidden">
+                            SENDING...
+                          </span>
+                          <MailIcon className="w-3 h-3 sm:w-4 sm:h-4 animate-bounce" />
                         </>
                       ) : (
                         <>
-                          <CheckCircleIcon className="w-5 h-5 group-hover/btn:animate-bounce" />
+                          <CheckCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 group-hover/btn:animate-bounce" />
                           <span className="relative z-10">PASS</span>
-                          <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
+                          <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-300 rounded-full animate-pulse"></div>
                         </>
                       )}
                     </button>
@@ -446,7 +414,7 @@ function InterviewScheduleUI() {
                       onClick={() => handleInterviewResult(interview, "fail")}
                       disabled={isAnyProcessing}
                       className={`
-                      group/btn relative overflow-hidden flex items-center gap-3 px-8 py-4 rounded-lg font-mono transition-all duration-300 font-black tracking-widest transform hover:scale-110 active:scale-95 shadow-2xl
+                      group/btn relative overflow-hidden flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 rounded-lg font-mono transition-all duration-300 font-black tracking-wider sm:tracking-widest transform hover:scale-105 sm:hover:scale-110 active:scale-95 shadow-2xl text-xs sm:text-sm
                       ${
                         isProcessingFail
                           ? "bg-gradient-to-r from-red-500 to-red-600 border-2 border-red-300 text-white cursor-wait scale-105 shadow-red-500/60 processing-animation"
@@ -461,17 +429,20 @@ function InterviewScheduleUI() {
 
                       {isProcessingFail ? (
                         <>
-                          <Loader2Icon className="w-5 h-5 animate-spin" />
-                          <span className="relative z-10">
+                          <Loader2Icon className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                          <span className="relative z-10 hidden sm:inline">
                             SENDING EMAIL...
                           </span>
-                          <MailIcon className="w-4 h-4 animate-bounce" />
+                          <span className="relative z-10 sm:hidden">
+                            SENDING...
+                          </span>
+                          <MailIcon className="w-3 h-3 sm:w-4 sm:h-4 animate-bounce" />
                         </>
                       ) : (
                         <>
-                          <AlertCircleIcon className="w-5 h-5 group-hover/btn:animate-bounce" />
+                          <AlertCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 group-hover/btn:animate-bounce" />
                           <span className="relative z-10">FAIL</span>
-                          <div className="w-2 h-2 bg-red-300 rounded-full animate-pulse"></div>
+                          <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-300 rounded-full animate-pulse"></div>
                         </>
                       )}
                     </button>
@@ -487,26 +458,34 @@ function InterviewScheduleUI() {
                     {isInterviewJoinable(interview) ? (
                       <button
                         onClick={() => joinInterview(interview)}
-                        className="flex items-center gap-3 bg-gradient-to-r from-green-600/80 to-green-700/80 border border-green-500/60 text-white px-6 py-3 rounded-lg font-mono hover:from-green-500/90 hover:to-green-600/90 hover:border-green-400/70 transition-all duration-300 shadow-lg hover:shadow-green-900/40 font-black tracking-widest hover:scale-105 active:scale-95"
+                        className="flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-green-600/80 to-green-700/80 border border-green-500/60 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-mono hover:from-green-500/90 hover:to-green-600/90 hover:border-green-400/70 transition-all duration-300 shadow-lg hover:shadow-green-900/40 font-black tracking-wider sm:tracking-widest hover:scale-105 active:scale-95 text-xs sm:text-sm"
                       >
-                        <VideoIcon className="w-5 h-5" />
-                        JOIN INTERVIEW
+                        <VideoIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">JOIN INTERVIEW</span>
+                        <span className="sm:hidden">JOIN</span>
                       </button>
                     ) : (
-                      <div className="flex items-center gap-3 bg-slate-700/40 border border-slate-600/50 text-slate-400 px-6 py-3 rounded-lg font-mono font-black tracking-wider">
-                        <ClockIcon className="w-5 h-5" />
-                        {new Date(interview.startTime) > new Date()
-                          ? "NOT YET AVAILABLE"
-                          : "INTERVIEW ENDED"}
+                      <div className="flex items-center gap-2 sm:gap-3 bg-slate-700/40 border border-slate-600/50 text-slate-400 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-mono font-black tracking-wider text-xs sm:text-sm">
+                        <ClockIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">
+                          {new Date(interview.startTime) > new Date()
+                            ? "NOT YET AVAILABLE"
+                            : "INTERVIEW ENDED"}
+                        </span>
+                        <span className="sm:hidden">
+                          {new Date(interview.startTime) > new Date()
+                            ? "NOT YET"
+                            : "ENDED"}
+                        </span>
                       </div>
                     )}
                   </div>
                 )}
 
               <div className="flex items-center justify-center">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <div
-                    className={`w-3 h-3 rounded-full shadow-lg ${
+                    className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full shadow-lg ${
                       interview.status &&
                       interview.status.toLowerCase() === "upcoming"
                         ? "bg-green-400 animate-pulse shadow-green-400/50"
@@ -532,7 +511,7 @@ function InterviewScheduleUI() {
                     }`}
                   ></div>
                   <span
-                    className={`text-sm font-black font-mono tracking-widest uppercase ${
+                    className={`text-xs sm:text-sm font-black font-mono tracking-wider sm:tracking-widest uppercase ${
                       interview.status &&
                       interview.status.toLowerCase() === "upcoming"
                         ? "text-green-300"
@@ -574,39 +553,41 @@ function InterviewScheduleUI() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900/40 to-slate-900 font-mono">
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 via-transparent to-green-900/20"></div>
-        <div className="relative max-w-6xl mx-auto px-8 pt-20 pb-16">
-          <div className="flex items-center justify-between">
-            <div className="space-y-6">
-              <h1 className="text-7xl font-black font-mono tracking-wider text-transparent bg-gradient-to-br from-green-400 to-white bg-clip-text drop-shadow-2xl">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 lg:pt-20 pb-8 sm:pb-12 lg:pb-16">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-8">
+            <div className="space-y-4 sm:space-y-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black font-mono tracking-wider text-transparent bg-gradient-to-br from-green-400 to-white bg-clip-text drop-shadow-2xl">
                 DOMINION
               </h1>
-              <p className="text-2xl font-mono font-medium text-green-300 tracking-wide max-w-2xl leading-relaxed">
-                COMMAND ABSOLUTE AUTHORITY OVER YOUR RECRUITMENT PROCESS
+              <p className="text-base sm:text-xl lg:text-2xl font-mono font-medium text-green-300 tracking-wide max-w-2xl leading-relaxed">
+                <span className="hidden sm:inline">COMMAND ABSOLUTE AUTHORITY OVER YOUR RECRUITMENT PROCESS</span>
+                <span className="sm:hidden">COMMAND YOUR RECRUITMENT</span>
               </p>
             </div>
 
-            <div>
+            <div className="flex justify-start lg:justify-end">
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <button className="bg-slate-800/60 backdrop-blur-xl border border-green-700/50 text-green-200 px-12 py-4 rounded-lg text-lg font-black font-mono tracking-widest hover:bg-green-800/30 hover:border-green-600/70 transition-all duration-500 hover:scale-105 active:scale-95 shadow-2xl hover:shadow-green-900/40">
-                    SCHEDULE INTERVIEW
+                  <button className="bg-slate-800/60 backdrop-blur-xl border border-green-700/50 text-green-200 px-6 sm:px-8 lg:px-12 py-3 sm:py-4 rounded-lg text-sm sm:text-base lg:text-lg font-black font-mono tracking-wider sm:tracking-widest hover:bg-green-800/30 hover:border-green-600/70 transition-all duration-500 hover:scale-105 active:scale-95 shadow-2xl hover:shadow-green-900/40">
+                    <span className="hidden sm:inline">SCHEDULE INTERVIEW</span>
+                    <span className="sm:hidden">SCHEDULE</span>
                   </button>
                 </DialogTrigger>
 
-                <DialogContent className="sm:max-w-[600px] bg-gradient-to-br from-slate-900/95 to-green-900/20 border border-green-700/50 backdrop-blur-sm shadow-2xl">
+                <DialogContent className="w-[95vw] max-w-[600px] sm:w-full bg-gradient-to-br from-slate-900/95 to-green-900/20 border border-green-700/50 backdrop-blur-sm shadow-2xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle className="text-green-300 text-2xl font-black font-mono tracking-wider">
+                    <DialogTitle className="text-green-300 text-xl sm:text-2xl font-black font-mono tracking-wider">
                       NEW INTERVIEW SESSION
                     </DialogTitle>
                   </DialogHeader>
 
-                  <div className="space-y-6 py-4 text-green-100 font-mono">
+                  <div className="space-y-4 sm:space-y-6 py-4 text-green-100 font-mono">
                     <div>
-                      <label className="text-sm font-black font-mono text-green-400 tracking-widest">
+                      <label className="text-xs sm:text-sm font-black font-mono text-green-400 tracking-widest">
                         TITLE
                       </label>
                       <Input
-                        className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono focus:border-green-600/60 focus:ring-green-600/20 mt-2 placeholder:text-green-400/50"
+                        className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono focus:border-green-600/60 focus:ring-green-600/20 mt-2 placeholder:text-green-400/50 text-sm sm:text-base"
                         value={formData.title}
                         onChange={(e) =>
                           setFormData({ ...formData, title: e.target.value })
@@ -616,11 +597,11 @@ function InterviewScheduleUI() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-black font-mono text-green-400 tracking-widest">
+                      <label className="text-xs sm:text-sm font-black font-mono text-green-400 tracking-widest">
                         DESCRIPTION
                       </label>
                       <Textarea
-                        className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono focus:border-green-600/60 focus:ring-green-600/20 mt-2 placeholder:text-green-400/50 min-h-[80px]"
+                        className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono focus:border-green-600/60 focus:ring-green-600/20 mt-2 placeholder:text-green-400/50 min-h-[80px] text-sm sm:text-base"
                         value={formData.description}
                         onChange={(e) =>
                           setFormData({
@@ -633,14 +614,14 @@ function InterviewScheduleUI() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-black font-mono text-green-400 tracking-widest">
+                      <label className="text-xs sm:text-sm font-black font-mono text-green-400 tracking-widest">
                         POSITION
                       </label>
                       <Select
                         value={selectedJobId}
                         onValueChange={setSelectedJobId}
                       >
-                        <SelectTrigger className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono mt-2 focus:border-green-600/60 focus:ring-green-600/20">
+                        <SelectTrigger className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono mt-2 focus:border-green-600/60 focus:ring-green-600/20 text-sm sm:text-base">
                           <SelectValue placeholder="SELECT POSITION" />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-900/95 border-green-700/50 backdrop-blur-sm font-mono">
@@ -648,7 +629,7 @@ function InterviewScheduleUI() {
                             <SelectItem
                               key={job._id}
                               value={job._id}
-                              className="text-green-100 focus:bg-green-800/40 focus:text-green-50 font-mono"
+                              className="text-green-100 focus:bg-green-800/40 focus:text-green-50 font-mono text-sm sm:text-base"
                             >
                               {job.title.toUpperCase()}
                             </SelectItem>
@@ -658,7 +639,7 @@ function InterviewScheduleUI() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-black font-mono text-green-400 tracking-widest">
+                      <label className="text-xs sm:text-sm font-black font-mono text-green-400 tracking-widest">
                         CANDIDATE
                       </label>
                       <Select
@@ -667,7 +648,7 @@ function InterviewScheduleUI() {
                           setFormData({ ...formData, candidateId: val })
                         }
                       >
-                        <SelectTrigger className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono mt-2 focus:border-green-600/60 focus:ring-green-600/20">
+                        <SelectTrigger className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono mt-2 focus:border-green-600/60 focus:ring-green-600/20 text-sm sm:text-base">
                           <SelectValue placeholder="SELECT CANDIDATE" />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-900/95 border-green-700/50 backdrop-blur-sm font-mono">
@@ -675,17 +656,17 @@ function InterviewScheduleUI() {
                             <SelectItem
                               key={candidate?.clerkId}
                               value={candidate?.clerkId!}
-                              className="text-green-100 focus:bg-green-800/40 focus:text-green-50 font-mono"
+                              className="text-green-100 focus:bg-green-800/40 focus:text-green-50 font-mono text-sm sm:text-base"
                             >
-                              <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-2 sm:gap-3">
                                 <img
                                   src={
                                     candidate?.image || "/default-avatar.png"
                                   }
                                   alt={candidate?.name}
-                                  className="w-7 h-7 rounded-full border border-green-700/50"
+                                  className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-green-700/50"
                                 />
-                                <span className="font-black">
+                                <span className="font-black text-xs sm:text-sm">
                                   {candidate?.name &&
                                     candidate?.name.toUpperCase()}
                                 </span>
@@ -696,9 +677,9 @@ function InterviewScheduleUI() {
                       </Select>
                     </div>
 
-                    <div className="flex gap-6">
-                      <div>
-                        <label className="text-sm font-black font-mono text-green-400 tracking-widest">
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                      <div className="flex-1">
+                        <label className="text-xs sm:text-sm font-black font-mono text-green-400 tracking-widest">
                           DATE
                         </label>
                         <Calendar
@@ -709,17 +690,17 @@ function InterviewScheduleUI() {
                           }
                           disabled={(date) => {
                             const today = new Date();
-                            today.setHours(0, 0, 0, 0); // Reset time to start of day for comparison
+                            today.setHours(0, 0, 0, 0);
                             const compareDate = new Date(date);
                             compareDate.setHours(0, 0, 0, 0);
-                            return compareDate < today; // Allow today and future dates
+                            return compareDate < today;
                           }}
-                          className="bg-slate-800/40 border border-green-700/50 rounded-lg mt-2 font-mono text-green-100"
+                          className="bg-slate-800/40 border border-green-700/50 rounded-lg mt-2 font-mono text-green-100 scale-90 sm:scale-100 origin-top-left"
                         />
                       </div>
 
-                      <div className="flex flex-col">
-                        <label className="text-sm font-black font-mono text-green-400 tracking-widest">
+                      <div className="flex flex-col flex-1">
+                        <label className="text-xs sm:text-sm font-black font-mono text-green-400 tracking-widest">
                           TIME
                         </label>
                         <Select
@@ -728,7 +709,7 @@ function InterviewScheduleUI() {
                             setFormData({ ...formData, time })
                           }
                         >
-                          <SelectTrigger className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono mt-2 focus:border-green-600/60 focus:ring-green-600/20">
+                          <SelectTrigger className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono mt-2 focus:border-green-600/60 focus:ring-green-600/20 text-sm sm:text-base">
                             <SelectValue placeholder="SELECT TIME" />
                           </SelectTrigger>
                           <SelectContent className="bg-slate-900/95 border-green-700/50 backdrop-blur-sm max-h-[250px] overflow-y-auto font-mono">
@@ -740,7 +721,7 @@ function InterviewScheduleUI() {
                                     key={time}
                                     value={time}
                                     disabled={disabled}
-                                    className={`font-mono ${
+                                    className={`font-mono text-sm sm:text-base ${
                                       disabled
                                         ? "opacity-40 cursor-not-allowed text-gray-500 focus:bg-transparent focus:text-gray-500"
                                         : "text-green-100 focus:bg-green-800/40 focus:text-green-50"
@@ -764,14 +745,14 @@ function InterviewScheduleUI() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-black font-mono text-green-400 tracking-widest">
+                      <label className="text-xs sm:text-sm font-black font-mono text-green-400 tracking-widest">
                         INTERVIEW PANEL
                       </label>
                       <div className="flex flex-wrap gap-2 mb-3 mt-2">
                         {selectedInterviewers.map((interviewer) => (
                           <div
                             key={interviewer.clerkId}
-                            className="flex items-center gap-2 bg-green-800/30 border border-green-700/40 px-3 py-2 rounded-lg"
+                            className="flex items-center gap-2 bg-green-800/30 border border-green-700/40 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg"
                           >
                             <UserInfo user={interviewer} />
                             {interviewer.clerkId !== user?.id && (
@@ -779,9 +760,9 @@ function InterviewScheduleUI() {
                                 onClick={() =>
                                   removeInterviewer(interviewer.clerkId)
                                 }
-                                className="hover:bg-green-700/30 p-1 rounded transition-colors"
+                                className="hover:bg-green-700/30 p-0.5 sm:p-1 rounded transition-colors"
                               >
-                                <XIcon className="h-4 w-4 text-green-400 hover:text-green-300" />
+                                <XIcon className="h-3 w-3 sm:h-4 sm:w-4 text-green-400 hover:text-green-300" />
                               </button>
                             )}
                           </div>
@@ -789,7 +770,7 @@ function InterviewScheduleUI() {
                       </div>
 
                       <Select onValueChange={addInterviewer}>
-                        <SelectTrigger className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono focus:border-green-600/60 focus:ring-green-600/20">
+                        <SelectTrigger className="bg-slate-800/60 border-green-700/40 text-green-100 font-mono focus:border-green-600/60 focus:ring-green-600/20 text-sm sm:text-base">
                           <SelectValue placeholder="ADD PANEL MEMBER" />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-900/95 border-green-700/50 backdrop-blur-sm font-mono">
@@ -797,7 +778,7 @@ function InterviewScheduleUI() {
                             <SelectItem
                               key={interviewer.clerkId}
                               value={interviewer.clerkId}
-                              className="text-green-100 focus:bg-green-800/40 focus:text-green-50 font-mono"
+                              className="text-green-100 focus:bg-green-800/40 focus:text-green-50 font-mono text-sm sm:text-base"
                             >
                               <UserInfo user={interviewer} />
                             </SelectItem>
@@ -806,21 +787,22 @@ function InterviewScheduleUI() {
                       </Select>
                     </div>
 
-                    <div className="flex justify-end border-t border-green-700/30 pt-6">
+                    <div className="flex justify-end border-t border-green-700/30 pt-4 sm:pt-6">
                       <button
                         onClick={scheduleMeeting}
                         disabled={isCreating}
-                        className="relative group overflow-hidden bg-gradient-to-r from-green-700/80 to-green-800/80 border border-green-600/60 text-green-100 px-8 py-3 rounded-lg font-mono hover:from-green-600/90 hover:to-green-700/90 hover:border-green-500/70 transition-all duration-300 shadow-lg hover:shadow-green-900/40 font-black tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="relative group overflow-hidden bg-gradient-to-r from-green-700/80 to-green-800/80 border border-green-600/60 text-green-100 px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-mono hover:from-green-600/90 hover:to-green-700/90 hover:border-green-500/70 transition-all duration-300 shadow-lg hover:shadow-green-900/40 font-black tracking-wider sm:tracking-widest disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                       >
                         {isCreating ? (
                           <span className="flex items-center gap-2">
-                            <Loader2Icon className="w-5 h-5 animate-spin" />
+                            <Loader2Icon className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                             PROCESSING...
                           </span>
                         ) : (
                           <>
                             <span className="relative z-10">
-                              SCHEDULE INTERVIEW
+                              <span className="hidden sm:inline">SCHEDULE INTERVIEW</span>
+                              <span className="sm:hidden">SCHEDULE</span>
                             </span>
                             <div className="absolute inset-0 bg-gradient-to-r from-green-600/0 via-green-600/20 to-green-600/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
                           </>
@@ -835,14 +817,14 @@ function InterviewScheduleUI() {
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-8 pb-20">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 lg:pb-20">
         {activeInterviews.length > 0 && (
-          <div className="space-y-8 mb-16">
-            <h2 className="text-4xl font-black font-mono mb-16 tracking-widest text-transparent bg-gradient-to-r from-green-400 to-white bg-clip-text">
+          <div className="space-y-6 sm:space-y-8 mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-mono mb-8 sm:mb-12 lg:mb-16 tracking-wider sm:tracking-widest text-transparent bg-gradient-to-r from-green-400 to-white bg-clip-text">
               ACTIVE DOMINION SESSIONS
             </h2>
 
-            <div className="grid gap-8 lg:grid-cols-2">
+            <div className="grid gap-4 sm:gap-6 lg:gap-8 md:grid-cols-2">
               {activeInterviews.map((interview, index) =>
                 renderInterviewCard(interview, index, true)
               )}
@@ -851,12 +833,12 @@ function InterviewScheduleUI() {
         )}
 
         {completedInterviews.length > 0 && (
-          <div className="space-y-8">
-            <h2 className="text-4xl font-black font-mono mb-16 tracking-widest text-transparent bg-gradient-to-r from-green-400 to-white bg-clip-text">
+          <div className="space-y-6 sm:space-y-8">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-mono mb-8 sm:mb-12 lg:mb-16 tracking-wider sm:tracking-widest text-transparent bg-gradient-to-r from-green-400 to-white bg-clip-text">
               COMPLETED DOMINION SESSIONS
             </h2>
 
-            <div className="grid gap-8 lg:grid-cols-2">
+            <div className="grid gap-4 sm:gap-6 lg:gap-8 md:grid-cols-2">
               {completedInterviews.map((interview, index) =>
                 renderInterviewCard(interview, index, false)
               )}
@@ -865,18 +847,18 @@ function InterviewScheduleUI() {
         )}
 
         {activeInterviews.length === 0 && completedInterviews.length === 0 && (
-          <div className="text-center py-20">
-            <div className="bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-xl border border-green-600/30 rounded-lg p-12 mx-auto max-w-2xl">
-              <div className="space-y-6">
-                <div className="w-24 h-24 mx-auto bg-gradient-to-br from-green-600/20 to-green-700/20 rounded-full flex items-center justify-center border border-green-600/30">
-                  <VideoIcon className="w-12 h-12 text-green-400" />
+          <div className="text-center py-12 sm:py-16 lg:py-20">
+            <div className="bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-xl border border-green-600/30 rounded-lg p-8 sm:p-10 lg:p-12 mx-auto max-w-2xl">
+              <div className="space-y-4 sm:space-y-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto bg-gradient-to-br from-green-600/20 to-green-700/20 rounded-full flex items-center justify-center border border-green-600/30">
+                  <VideoIcon className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-green-400" />
                 </div>
 
-                <div className="space-y-4">
-                  <h3 className="text-3xl font-black font-mono tracking-wider text-green-300">
+                <div className="space-y-3 sm:space-y-4">
+                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-black font-mono tracking-wider text-green-300">
                     NO INTERVIEWS SCHEDULED
                   </h3>
-                  <p className="text-green-400/70 font-mono text-lg leading-relaxed">
+                  <p className="text-green-400/70 font-mono text-sm sm:text-base lg:text-lg leading-relaxed px-4">
                     Begin your dominion over the recruitment process by
                     scheduling your first interview session.
                   </p>
@@ -884,9 +866,10 @@ function InterviewScheduleUI() {
 
                 <button
                   onClick={() => setOpen(true)}
-                  className="bg-gradient-to-r from-green-700/80 to-green-800/80 border border-green-600/60 text-green-100 px-8 py-4 rounded-lg font-mono hover:from-green-600/90 hover:to-green-700/90 hover:border-green-500/70 transition-all duration-300 shadow-lg hover:shadow-green-900/40 font-black tracking-widest hover:scale-105 active:scale-95"
+                  className="bg-gradient-to-r from-green-700/80 to-green-800/80 border border-green-600/60 text-green-100 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-mono hover:from-green-600/90 hover:to-green-700/90 hover:border-green-500/70 transition-all duration-300 shadow-lg hover:shadow-green-900/40 font-black tracking-wider sm:tracking-widest hover:scale-105 active:scale-95 text-sm sm:text-base"
                 >
-                  INITIATE FIRST SESSION
+                  <span className="hidden sm:inline">INITIATE FIRST SESSION</span>
+                  <span className="sm:hidden">INITIATE SESSION</span>
                 </button>
               </div>
             </div>
