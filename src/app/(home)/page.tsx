@@ -168,7 +168,6 @@ export default function HomePage() {
               isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
             }`}
           >
-
             <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black font-mono tracking-tighter mb-4 sm:mb-6 bg-gradient-to-r from-green-400 via-gray-500 to-gray-300 bg-clip-text text-transparent leading-tight">
               BATTLEWORLD
             </h1>
@@ -178,8 +177,9 @@ export default function HomePage() {
           </div>
 
           {/* Action Buttons */}
+          {/* Action Buttons */}
           <div
-            className={`flex flex-col gap-4 sm:gap-6 justify-center items-center mb-16 sm:mb-20 transform transition-all duration-1000 delay-300 ${
+            className={`flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16 sm:mb-20 transform transition-all duration-1000 delay-300 ${
               isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
             }`}
           >
@@ -187,7 +187,7 @@ export default function HomePage() {
               <>
                 <button
                   onClick={() => router.push("/profile/setup")}
-                  className="group w-full max-w-xs sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all duration-300 font-mono text-xs sm:text-sm tracking-wider uppercase"
+                  className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all duration-300 font-mono text-xs sm:text-sm tracking-wider uppercase text-center"
                 >
                   <span className="group-hover:text-white transition-colors">
                     Hero Registration
@@ -196,7 +196,7 @@ export default function HomePage() {
 
                 <button
                   onClick={() => setShowDoomModal(true)}
-                  className="group w-full max-w-xs sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/30 hover:from-blue-600/30 hover:to-purple-600/30 hover:border-blue-400/50 transition-all duration-300 font-mono text-xs sm:text-sm tracking-wider uppercase"
+                  className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/30 hover:from-blue-600/30 hover:to-purple-600/30 hover:border-blue-400/50 transition-all duration-300 font-mono text-xs sm:text-sm tracking-wider uppercase text-center"
                 >
                   <span className="group-hover:text-blue-100 transition-colors">
                     Doom's Tribunal
@@ -206,7 +206,7 @@ export default function HomePage() {
             ) : dbUser.role === "interviewer" ? (
               <button
                 onClick={() => router.push("/dashboard")}
-                className="w-full max-w-xs sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-emerald-600/20 backdrop-blur-sm border border-emerald-500/30 hover:bg-emerald-600/30 hover:border-emerald-400/50 transition-all duration-300 font-mono text-xs sm:text-sm tracking-wider uppercase"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-emerald-600/20 backdrop-blur-sm border border-emerald-500/30 hover:bg-emerald-600/30 hover:border-emerald-400/50 transition-all duration-300 font-mono text-xs sm:text-sm tracking-wider uppercase"
               >
                 Enter Dashboard
               </button>
